@@ -1,485 +1,3463 @@
 <!DOCTYPE html>
+
+
+
+
+
+
+
 <html lang="ar" dir="rtl">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <head>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <meta charset="UTF-8">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <title>حجز الكتاب | Zatune Book Shop</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <link rel="stylesheet" href="style.css">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <style>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         .bookingPage {
+
+
+
+
+
+
+
             min-height: 100vh;
+
+
+
+
+
+
+
             background-color: #0171F9;
+
+
+
+
+
+
+
             display: flex;
+
+
+
+
+
+
+
             justify-content: center;
+
+
+
+
+
+
+
             align-items: center;
+
+
+
+
+
+
+
             padding: 50px 20px;
+
+
+
+
+
+
+
             box-sizing: border-box;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .bookingBox {
+
+
+
+
+
+
+
             width: 500px;
+
+
+
+
+
+
+
             max-width: 100%;
+
+
+
+
+
+
+
             background-color: #fff;
+
+
+
+
+
+
+
             border-radius: 25px;
+
+
+
+
+
+
+
             padding: 35px;
+
+
+
+
+
+
+
             box-sizing: border-box;
+
+
+
+
+
+
+
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+
+
+
+
+
+
+
             font-family: "Alexandria", sans-serif;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .bookingBox h1 {
+
+
+
+
+
+
+
             text-align: center;
+
+
+
+
+
+
+
             margin-bottom: 10px;
+
+
+
+
+
+
+
             color: #222;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .bookingBox .subtitle {
+
+
+
+
+
+
+
             text-align: center;
+
+
+
+
+
+
+
             color: #777;
+
+
+
+
+
+
+
             margin-bottom: 30px;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .bookName {
+
+
+
+
+
+
+
             background-color: #f1f1f1;
+
+
+
+
+
+
+
             padding: 15px;
+
+
+
+
+
+
+
             border-radius: 15px;
+
+
+
+
+
+
+
             margin-bottom: 25px;
+
+
+
+
+
+
+
             text-align: center;
+
+
+
+
+
+
+
             font-weight: 600;
+
+
+
+
+
+
+
             color: #0171F9;
+
+
+
+
+
+
+
             line-height: 1.8;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .formGroup {
+
+
+
+
+
+
+
             margin-bottom: 20px;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .formGroup label {
+
+
+
+
+
+
+
             display: block;
+
+
+
+
+
+
+
             margin-bottom: 8px;
+
+
+
+
+
+
+
             font-weight: 600;
+
+
+
+
+
+
+
             color: #333;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .formGroup input {
+
+
+
+
+
+
+
             width: 100%;
+
+
+
+
+
+
+
             height: 50px;
+
+
+
+
+
+
+
             border: 1px solid #ddd;
+
+
+
+
+
+
+
             border-radius: 12px;
+
+
+
+
+
+
+
             padding: 0 15px;
+
+
+
+
+
+
+
             box-sizing: border-box;
+
+
+
+
+
+
+
             outline: none;
+
+
+
+
+
+
+
             font-family: "Alexandria", sans-serif;
+
+
+
+
+
+
+
             font-size: 14px;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .formGroup input:focus {
+
+
+
+
+
+
+
             border-color: #0171F9;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .uploadBox {
+
+
+
+
+
+
+
             border: 2px dashed #0171F9;
+
+
+
+
+
+
+
             border-radius: 15px;
+
+
+
+
+
+
+
             padding: 25px;
+
+
+
+
+
+
+
             text-align: center;
+
+
+
+
+
+
+
             cursor: pointer;
+
+
+
+
+
+
+
             transition: 0.3s;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .uploadBox:hover {
+
+
+
+
+
+
+
             background-color: #f5f9ff;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .uploadBox input {
+
+
+
+
+
+
+
             display: none;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .uploadText {
+
+
+
+
+
+
+
             color: #0171F9;
+
+
+
+
+
+
+
             font-weight: 600;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .fileName {
+
+
+
+
+
+
+
             margin-top: 10px;
+
+
+
+
+
+
+
             color: #777;
+
+
+
+
+
+
+
             font-size: 13px;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .bookingBtn {
+
+
+
+
+
+
+
             width: 100%;
+
+
+
+
+
+
+
             height: 55px;
+
+
+
+
+
+
+
             border: none;
+
+
+
+
+
+
+
             border-radius: 50px;
+
+
+
+
+
+
+
             background-color: #EE626B;
+
+
+
+
+
+
+
             color: white;
+
+
+
+
+
+
+
             font-size: 16px;
+
+
+
+
+
+
+
             font-weight: 600;
+
+
+
+
+
+
+
             cursor: pointer;
+
+
+
+
+
+
+
             font-family: "Alexandria", sans-serif;
+
+
+
+
+
+
+
             transition: 0.3s;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .bookingBtn:hover {
+
+
+
+
+
+
+
             background-color: #9E4147;
+
+
+
+
+
+
+
             transform: translateY(-3px);
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .bookingBtn:disabled {
+
+
+
+
+
+
+
             opacity: 0.6;
+
+
+
+
+
+
+
             cursor: not-allowed;
+
+
+
+
+
+
+
             transform: none;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .loading {
+
+
+
+
+
+
+
             display: none;
+
+
+
+
+
+
+
             text-align: center;
+
+
+
+
+
+
+
             margin-top: 15px;
+
+
+
+
+
+
+
             color: #0171F9;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .successBox {
+
+
+
+
+
+
+
             display: none;
+
+
+
+
+
+
+
             text-align: center;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .successIcon {
+
+
+
+
+
+
+
             font-size: 60px;
+
+
+
+
+
+
+
             margin-bottom: 10px;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .successBox h2 {
+
+
+
+
+
+
+
             color: #222;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .successBox p {
+
+
+
+
+
+
+
             color: #777;
+
+
+
+
+
+
+
             line-height: 1.8;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .bookingCode {
+
+
+
+
+
+
+
             background-color: #0171F9;
+
+
+
+
+
+
+
             color: white;
+
+
+
+
+
+
+
             font-size: 28px;
+
+
+
+
+
+
+
             font-weight: bold;
+
+
+
+
+
+
+
             letter-spacing: 3px;
+
+
+
+
+
+
+
             padding: 20px;
+
+
+
+
+
+
+
             border-radius: 15px;
+
+
+
+
+
+
+
             margin: 25px 0;
+
+
+
+
+
+
+
             direction: ltr;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         .backBtn {
+
+
+
+
+
+
+
             display: inline-block;
+
+
+
+
+
+
+
             text-decoration: none;
+
+
+
+
+
+
+
             color: #0171F9;
+
+
+
+
+
+
+
             font-weight: 600;
+
+
+
+
+
+
+
             margin-top: 10px;
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     </style>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <body>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <div class="bookingPage">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         <div class="bookingBox">
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <!-- =========================
+
+
+
+
+
+
+
                  FORM
+
+
+
+
+
+
+
             ========================== -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             <div id="bookingForm">
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <h1>
+
+
+
+
+
+
+
                     حجز الكتاب
+
+
+
+
+
+
+
                 </h1>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <p class="subtitle">
+
+
+
+
+
+
+
                     قم بإدخال بياناتك لإتمام الحجز
+
+
+
+
+
+
+
                 </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 <!-- اسم الكتاب -->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <div
+
+
+
+
+
+
+
                     class="bookName"
+
+
+
+
+
+
+
                     id="bookName"
+
+
+
+
+
+
+
                 >
+
+
+
+
+
+
+
                     جاري تحميل الكتاب...
+
+
+
+
+
+
+
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 <!-- اسم الطالب -->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <div class="formGroup">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     <label>
+
+
+
+
+
+
+
                         اسم الطالب
+
+
+
+
+
+
+
                     </label>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     <input
+
+
+
+
+
+
+
                         type="text"
+
+
+
+
+
+
+
                         id="studentName"
+
+
+
+
+
+
+
                         placeholder="اكتب اسمك بالكامل"
+
+
+
+
+
+
+
                     >
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 <!-- رقم الهاتف -->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <div class="formGroup">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     <label>
+
+
+
+
+
+
+
                         رقم الهاتف
+
+
+
+
+
+
+
                     </label>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     <input
+
+
+
+
+
+
+
                         type="tel"
+
+
+
+
+
+
+
                         id="phone"
+
+
+
+
+
+
+
                         placeholder="01xxxxxxxxx"
+
+
+
+
+
+
+
                     >
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 <!-- رفع الصورة -->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <div class="formGroup">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     <label>
+
+
+
+
+
+
+
                         رفع الصورة
+
+
+
+
+
+
+
                     </label>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                     <label class="uploadBox">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         <input
+
+
+
+
+
+
+
                             type="file"
+
+
+
+
+
+
+
                             id="studentImage"
+
+
+
+
+
+
+
                             accept="image/*"
+
+
+
+
+
+
+
                         >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                         <div class="uploadText">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                             📷 اضغط لاختيار الصورة
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                         <div
+
+
+
+
+
+
+
                             class="fileName"
+
+
+
+
+
+
+
                             id="fileName"
+
+
+
+
+
+
+
                         >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                             لم يتم اختيار صورة
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     </label>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 <!-- زر الحجز -->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <button
+
+
+
+
+
+
+
                     class="bookingBtn"
+
+
+
+
+
+
+
                     id="bookingBtn"
+
+
+
+
+
+
+
                 >
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     إتمام حجز الكتاب
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 </button>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <div
+
+
+
+
+
+
+
                     class="loading"
+
+
+
+
+
+
+
                     id="loading"
+
+
+
+
+
+
+
                 >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     جاري تسجيل الحجز...
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <!-- =========================
+
+
+
+
+
+
+
                  SUCCESS
+
+
+
+
+
+
+
             ========================== -->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <div
+
+
+
+
+
+
+
                 class="successBox"
+
+
+
+
+
+
+
                 id="successBox"
+
+
+
+
+
+
+
             >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 <div class="successIcon">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     ✅
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 <h2>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     تم الحجز بنجاح
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 </h2>
 
 
-                <p>
 
-                    كود الحجز الخاص بك:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <p id="successDetails">
+
+
+
+
+
+
+
+                    تم تسجيل الحجز بنجاح.
+
+
+
+
+
+
 
                 </p>
 
 
+
+
+
+
+
+
+
+
+
                 <div
+
+
+
+
+
+
+
                     class="bookingCode"
+
+
+
+
+
+
+
                     id="bookingCode"
+
+
+
+
+
+
+
                 >
 
-                    ZTN-0001
+
+
+
+
+
+
+                    جاري تجهيز بيانات الحجز...
+
+
+
+
+
+
 
                 </div>
 
 
+
+
+
+
+
+
+
+
+
                 <p>
 
-                    احتفظ بهذا الكود لاستخدامه عند استلام الكتاب.
+
+
+
+
+
+
+                    احتفظ ببيانات الطالب والكتاب عند استلام الكتاب.
+
+
+
+
+
+
 
                 </p>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <a
+
+
+
+
+
+
+
                     href="index.html"
+
+
+
+
+
+
+
                     class="backBtn"
+
+
+
+
+
+
+
                 >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     العودة للرئيسية
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     </div>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 
+    const SUPABASE_URL =
+        "https://ddqjdcurwlffsmrkcylo.supabase.co";
 
-    // ==========================================
-    // معرفة الكتاب من الرابط
-    // ==========================================
+    const SUPABASE_KEY =
+        "sb_publishable_OuHtmXoZZGqj46tD1Top6A_hmnz5f1o";
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
 
     const params =
         new URLSearchParams(window.location.search);
 
+    const bookId =
+        params.get("book_id");
 
-    const book =
+    const oldBookKey =
         params.get("book");
 
 
     const bookName =
         document.getElementById("bookName");
 
+    const studentNameInput =
+        document.getElementById("studentName");
 
-    // ==========================================
-    // أسماء الكتب
-    // ==========================================
-
-    const books = {
-
-        physics:
-            "فيزياء تالتة ثانوي - كتاب الكهربية - محمد عبدالمعبود",
-
-        arabic:
-            "لغة عربية تالتة ثانوي - كتاب الترم الأول - محمد صلاح",
-
-        arabic1:
-            "لغة عربية أولى بكالوريا - كتاب الترم الأول - محمد صلاح",
-
-        arabic2:
-            "لغة عربية تانية بكالوريا - كتاب الترم الأول - محمد صلاح"
-
-    };
-
-
-    // ==========================================
-    // عرض اسم الكتاب
-    // ==========================================
-
-    if (book && books[book]) {
-
-        bookName.textContent =
-            books[book];
-
-    } else {
-
-        bookName.textContent =
-            "الكتاب غير محدد";
-
-    }
-
-
-
-    // ==========================================
-    // رفع الصورة
-    // ==========================================
+    const phoneInput =
+        document.getElementById("phone");
 
     const imageInput =
         document.getElementById("studentImage");
 
-
     const fileName =
         document.getElementById("fileName");
+
+    const bookingBtn =
+        document.getElementById("bookingBtn");
+
+    const loading =
+        document.getElementById("loading");
+
+
+    let currentBook = null;
+    let currentProfile = null;
+
+
+    async function loadBookingData() {
+
+        try {
+
+            const {
+                data: { session },
+                error: sessionError
+            } = await supabaseClient.auth.getSession();
+
+
+            if (sessionError) {
+
+                console.error(sessionError);
+
+                alert("حدث خطأ أثناء التحقق من تسجيل الدخول.");
+
+                return;
+            }
+
+
+            if (!session) {
+
+                alert("من فضلك سجل دخولك أولاً.");
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+
+            // بيانات الطالب
+            const {
+                data: profile,
+                error: profileError
+            } = await supabaseClient
+                .from("profiles")
+                .select("full_name, phone, student_code")
+                .eq("id", session.user.id)
+                .maybeSingle();
+
+
+            if (profileError) {
+
+                console.error(
+                    "Profile error:",
+                    profileError
+                );
+
+            }
+
+
+            currentProfile =
+                profile || null;
+
+
+            if (profile?.full_name) {
+
+                studentNameInput.value =
+                    profile.full_name;
+
+            }
+
+
+            if (profile?.phone) {
+
+                phoneInput.value =
+                    profile.phone;
+
+            }
+
+
+            // بيانات الكتاب
+            let book = null;
+            let bookError = null;
+
+
+            if (bookId) {
+
+                const result =
+                    await supabaseClient
+                        .from("books")
+                        .select("*")
+                        .eq("id", bookId)
+                        .eq("active", true)
+                        .maybeSingle();
+
+                book =
+                    result.data;
+
+                bookError =
+                    result.error;
+            }
+
+
+            // دعم الروابط القديمة
+            if (!book && oldBookKey) {
+
+                const oldBooks = {
+
+                    physics: "PHY-001",
+                    arabic: "ARB-001",
+                    arabic1: "ARB-002",
+                    arabic2: "ARB-003"
+
+                };
+
+
+                const code =
+                    oldBooks[oldBookKey];
+
+
+                if (code) {
+
+                    const result =
+                        await supabaseClient
+                            .from("books")
+                            .select("*")
+                            .eq("book_code", code)
+                            .eq("active", true)
+                            .maybeSingle();
+
+                    book =
+                        result.data;
+
+                    bookError =
+                        result.error;
+                }
+            }
+
+
+            if (bookError) {
+
+                console.error(
+                    "Book error:",
+                    bookError
+                );
+
+            }
+
+
+            if (!book) {
+
+                bookName.textContent =
+                    "الكتاب غير موجود";
+
+                return;
+            }
+
+
+            currentBook =
+                book;
+
+
+            bookName.textContent =
+                book.teacher
+                    ? `${book.name} - ${book.teacher}`
+                    : book.name;
+
+        } catch (error) {
+
+            console.error(error);
+
+            bookName.textContent =
+                "حدث خطأ أثناء تحميل بيانات الكتاب";
+        }
+    }
 
 
     imageInput.addEventListener(
@@ -502,46 +3480,42 @@
     );
 
 
-
-    // ==========================================
-    // زر الحجز
-    // ==========================================
-
-    const bookingBtn =
-        document.getElementById("bookingBtn");
-
-
-    const loading =
-        document.getElementById("loading");
-
-
     bookingBtn.addEventListener(
         "click",
-        function () {
-
+        async function () {
 
             const name =
-                document
-                .getElementById("studentName")
-                .value
-                .trim();
-
+                studentNameInput.value.trim();
 
             const phone =
-                document
-                .getElementById("phone")
-                .value
-                .trim();
-
+                phoneInput.value.trim();
 
             const image =
                 imageInput.files[0];
 
 
+            if (!currentBook) {
 
-            // ==================================
-            // التحقق من البيانات
-            // ==================================
+                alert(
+                    "لم يتم تحميل بيانات الكتاب. افتح صفحة الحجز من زر الحجز مرة أخرى."
+                );
+
+                return;
+            }
+
+
+            if (
+                Number(currentBook.available_quantity || 0)
+                <= 0
+            ) {
+
+                alert(
+                    "عذرًا، الحجز اكتمل لهذا الكتاب."
+                );
+
+                return;
+            }
+
 
             if (name === "") {
 
@@ -550,7 +3524,6 @@
                 );
 
                 return;
-
             }
 
 
@@ -561,7 +3534,6 @@
                 );
 
                 return;
-
             }
 
 
@@ -572,63 +3544,273 @@
                 );
 
                 return;
-
             }
 
 
-
-            // ==================================
-            // Loading
-            // ==================================
-
             loading.style.display =
                 "block";
-
 
             bookingBtn.disabled =
                 true;
 
 
+            try {
 
-            // ==================================
-            // مؤقت مؤقت للتجربة
-            // ==================================
-
-            setTimeout(
-                function () {
+                const {
+                    data: { session }
+                } = await supabaseClient.auth.getSession();
 
 
-                    loading.style.display =
-                        "none";
+                if (!session) {
+
+                    throw new Error(
+                        "يجب تسجيل الدخول أولاً."
+                    );
+                }
 
 
-                    document
-                        .getElementById("bookingForm")
-                        .style.display = "none";
+                // رفع الصورة
+                const extension =
+                    image.name.includes(".")
+                        ? image.name.split(".").pop()
+                        : "jpg";
 
 
-                    document
-                        .getElementById("successBox")
-                        .style.display = "block";
+                const filePath =
+                    `${session.user.id}/${Date.now()}.${extension}`;
 
 
-                    document
-                        .getElementById("bookingCode")
-                        .textContent = "ZTN-0001";
+                const {
+                    error: uploadError
+                } = await supabaseClient.storage
+                    .from("student-images")
+                    .upload(
+                        filePath,
+                        image,
+                        {
+                            upsert: false,
+                            contentType:
+                                image.type || "image/jpeg"
+                        }
+                    );
 
 
-                },
-                1000
-            );
+                if (uploadError) {
+
+                    console.error(uploadError);
+
+                    throw new Error(
+                        "تعذر رفع الصورة. تأكد من صلاحيات Bucket student-images."
+                    );
+                }
+
+
+                const {
+                    data: publicUrlData
+                } = supabaseClient.storage
+                    .from("student-images")
+                    .getPublicUrl(filePath);
+
+
+                const imageUrl =
+                    publicUrlData?.publicUrl || null;
+
+
+                // إنشاء الحجز
+                const {
+                    data: reservationData,
+                    error: reservationError
+                } = await supabaseClient.rpc(
+                    "create_reservation",
+                    {
+                        p_book_id:
+                            Number(currentBook.id),
+
+                        p_student_name:
+                            name,
+
+                        p_phone:
+                            phone,
+
+                        p_image_url:
+                            imageUrl
+                    }
+                );
+
+
+                if (reservationError) {
+
+                    console.error(
+                        reservationError
+                    );
+
+                    throw new Error(
+                        reservationError.message
+                    );
+                }
+
+
+                // ==========================================
+                // الرقم الخاص بهذا الكتاب
+                // ==========================================
+
+                let reservationNumber = null;
+
+
+                if (
+                    Array.isArray(reservationData) &&
+                    reservationData.length > 0
+                ) {
+
+                    reservationNumber =
+                        reservationData[0]
+                            .reservation_number;
+
+                } else if (
+                    reservationData &&
+                    reservationData.reservation_number
+                ) {
+
+                    reservationNumber =
+                        reservationData.reservation_number;
+
+                }
+
+
+                if (!reservationNumber) {
+
+                    throw new Error(
+                        "تم الحجز، لكن لم يتم استلام رقم الحجز من قاعدة البيانات."
+                    );
+                }
+
+
+                const bookCode =
+                    currentBook.book_code ||
+                    "BOOK";
+
+
+                // ARB-001 / ARB-002 / PHY-001 ...
+                const reservationCode =
+                    `${bookCode.split("-")[0]}-${String(reservationNumber).padStart(3, "0")}`;
+
+
+                loading.style.display =
+                    "none";
+
+
+                document
+                    .getElementById("bookingForm")
+                    .style.display =
+                    "none";
+
+
+                document
+                    .getElementById("successBox")
+                    .style.display =
+                    "block";
+
+
+                document
+                    .getElementById("bookingCode")
+                    .textContent =
+                    reservationCode;
+
+
+                document
+                    .getElementById("successDetails")
+                    .textContent =
+                    "تم حجز الكتاب بنجاح";
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                loading.style.display =
+                    "none";
+
+
+                bookingBtn.disabled =
+                    false;
+
+
+                let message =
+                    error.message ||
+                    "حدث خطأ أثناء تسجيل الحجز";
+
+
+                if (
+                    message.includes("duplicate") ||
+                    message.includes("unique") ||
+                    message.includes("حجز هذا الكتاب")
+                ) {
+
+                    message =
+                        "أنت قمت بحجز هذا الكتاب من قبل.";
+                }
+
+
+                alert(message);
+            }
 
         }
     );
 
+
+    loadBookingData();
+
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </body>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </html>
 
-<!-- omae -->
+
+
+
+
+
+
+
+
+
+
+

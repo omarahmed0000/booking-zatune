@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>إنشاء الحساب</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{margin:0;min-height:100vh;background:#0171F9;font-family:Alexandria,Arial,sans-serif}
+.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:25px}
+.box{width:460px;max-width:100%;background:#fff;border-radius:28px;padding:38px;box-shadow:0 20px 60px #0002}
+.logo{text-align:center} .logo img{width:110px}
+h1{text-align:center;color:#222;margin:12px 0;font-size:27px}
+.sub{text-align:center;color:#777;font-size:13px;line-height:1.8;margin-bottom:25px}
+.group{margin-bottom:15px} label{display:block;font-size:13px;font-weight:600;margin-bottom:7px}
+input{width:100%;height:50px;border:1px solid #ddd;border-radius:13px;padding:0 14px;box-sizing:border-box;font-family:inherit;outline:none}
+input:focus{border-color:#0171F9}
+button{width:100%;height:54px;border:0;border-radius:50px;background:#EE626B;color:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+button:disabled{opacity:.6}
+.msg{display:none;margin-top:15px;padding:12px;border-radius:12px;text-align:center;font-size:12px;line-height:1.8}
+.err{display:block;background:#fff0f1;color:#c62828} .ok{display:block;background:#ecfff3;color:#168044}
+.links{text-align:center;margin-top:20px;font-size:13px} a{color:#0171F9;text-decoration:none;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="box">
+<div class="logo"><img src="logo2-Photoroom.png" alt="Logo"></div>
+<h1>إنشاء الحساب</h1>
+<div class="sub">أنشئ حسابك باستخدام رقم الموبايل وكلمة المرور</div>
+<form id="form">
+<div class="group"><label>الاسم بالكامل</label><input id="name" required></div>
+<div class="group"><label>رقم الموبايل</label><input id="phone" type="tel" inputmode="tel" placeholder="01012345678" required></div>
+<div class="group"><label>كلمة المرور</label><input id="pass" type="password" minlength="6" required></div>
+<div class="group"><label>تأكيد كلمة المرور</label><input id="pass2" type="password" minlength="6" required></div>
+<button id="btn">إنشاء الحساب</button><div id="msg" class="msg"></div>
+</form>
+<div class="links">لديك حساب بالفعل؟ <a href="login.html">سجل دخولك</a></div>
+<div class="links"><a href="index.html" style="color:#777;font-weight:400">العودة للرئيسية</a></div>
+</div></div>
+<script>
+const SUPABASE_URL = "https://ddqjdcurwlffsmrkcylo.supabase.co";
+const SUPABASE_KEY = "sb_publishable_OuHtmXoZZGqj46tD1Top6A_hmnz5f1o";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const form = document.getElementById("form");
+const btn = document.getElementById("btn");
+const msg = document.getElementById("msg");
+
+function phoneNorm(value) {
+  let p = value.replace(/\s|-/g, "");
+  if (p.startsWith("+20")) return p;
+  if (p.startsWith("20")) return "+" + p;
+  if (p.startsWith("01")) return "+20" + p.substring(1);
+  return p;
+}
+
+function show(text, type) {
+  msg.textContent = text;
+  msg.className = "msg " + type;
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const phone = phoneNorm(document.getElementById("phone").value.trim());
+  const password = document.getElementById("pass").value;
+  const password2 = document.getElementById("pass2").value;
+
+  if (name.length < 3)
+    return show("اكتب الاسم بالكامل.", "err");
+
+  if (!/^\+201\d{9}$/.test(phone))
+    return show("اكتب رقم مصري صحيح مثل 01012345678.", "err");
+
+  if (password.length < 6)
+    return show("كلمة المرور يجب أن تكون 6 أحرف على الأقل.", "err");
+
+  if (password !== password2)
+    return show("كلمتا المرور غير متطابقتين.", "err");
+
+  btn.disabled = true;
+  btn.textContent = "جاري إنشاء الحساب...";
+  msg.className = "msg";
+
+  try {
+    const { data, error } = await supabaseClient.functions.invoke("register", {
+      body: {
+        name: name,
+        phone: phone,
+        password: password
+      }
+    });
+
+    if (error) {
+      console.error(error);
+      show("حدث خطأ أثناء الاتصال بالسيرفر.", "err");
+      btn.disabled = false;
+      btn.textContent = "إنشاء الحساب";
+      return;
+    }
+
+    if (!data?.success) {
+      show(data?.error || "تعذر إنشاء الحساب.", "err");
+      btn.disabled = false;
+      btn.textContent = "إنشاء الحساب";
+      return;
+    }
+
+    show("تم إنشاء الحساب بنجاح ✅ سيتم تحويلك لتسجيل الدخول.", "ok");
+
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1200);
+
+  } catch (err) {
+    console.error(err);
+    show("حدث خطأ غير متوقع.", "err");
+    btn.disabled = false;
+    btn.textContent = "إنشاء الحساب";
+  }
+});
+</script>
+</body></html>

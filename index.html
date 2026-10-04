@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <!-- FONTS -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Zatune Book Shop</title>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div class="headerContainer">
+      <div class="header">
+        <a href="index.html" class="logo">
+          <img src="logo2-Photoroom.png" alt="logo" />
+        </a>
+        <div class="headerLinks">
+          <a href="<!contacsstUs.html">تواصل معنا</a>
+          <a href="#"> المدرسين</a>
+          <a href="#">الكتب</a>
+          <a href="index.html"> الرئيسية</a>
+          <button class="btn">سجل دخولك</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LANDING PAGE -->
+    <div class="landingPageContainer">
+      <div class="landingPage">
+        <!-- LEFT SIDE -->
+        <div class="leftSide">
+          <p class="welcome">مرحبا بك ؟</p>
+          <h1 class="slogan">في الموقع المخصص لحجز كتب السنتر</h1>
+          <p class="description">
+              كل كتب السنتر في مكان واحد
+             سجّل بياناتك لإتمام الحجز بكل سهولة<br> احجز كتابك الآن واستلمه
+             من السنتر في الموعد المحدد.
+          </p>
+          <div class="searchBar">
+
+              <input
+                  type="text"
+                  id="searchInput"
+                  placeholder="اكتب اسم مدرس او كتاب"
+                  autocomplete="off"
+              >
+
+              <button
+                  type="button"
+                  class="btn searchBtn"
+                    onclick="searchBooks()"
+              >
+                 SEARCH NOW
+              </button>
+
+          <div id="suggestions" class="suggestions"></div>
+
+        </div>
+        </div>
+
+        <!-- RIGHT SIDE  -->
+        <div class="imageContainer">
+          <img src="5.png" alt="" />
+        </div>
+      </div>
+    </div>
+
+    <!-- TRENDING GAMES SECTION  -->
+    <div class="trendingContainer">
+      <span>احجز الان</span>
+      <div class="trendingHeader">
+        <h1>الكتب المتاحة</h1>
+        <button class="btn">اظهر الكل</button>
+      </div>
+      <div class="trendingCard">
+        <!-- TRENDING GAME 1 -->
+        <div class="card" onclick="window.open('booking.html?book=physics', '_blank')">
+          <img src="images1.jpg" alt="" />
+          <div class="cardInfo">
+            <div class="cardName">
+              <p>فيزياء تالتة ثانوي</p>
+              <h3>كتاب الكهربية-محمد عبدالمعبود</h3>
+            </div>
+            <a href="#" class="icon">
+              <img src="images/online-shopping.png" alt="" />
+            </a>
+          </div>
+        </div>
+
+        <!-- TRENDING GAME 2 -->
+        <div class="card" onclick="window.open('booking.html?book=arabic', '_blank')">
+          <img src="images1.png" alt="" />
+          <div class="cardInfo">
+            <div class="cardName">
+              <p>لغة عربية تالتة ثانوي</p>
+              <h3>كتاب الترم الاول-محمد صلاح</h3>
+            </div>
+            <a href="#" class="icon">
+              <img src="images/online-shopping.png" alt="" />
+            </a>
+          </div>
+        </div>
+
+        <!-- TRENDING GAME 3 -->
+        <div class="card" onclick="window.open('booking.html?book=arabic1', '_blank')">
+          <img src="images2.png" alt="" />
+          <div class="cardInfo">
+            <div class="cardName">
+              <p>لغة عربية اولي بكالوريا</p>
+              <h3>كتاب الترم الاول-محمد صلاح</h3>
+            </div>
+            <a href="#" class="icon">
+              <img src="images/online-shopping.png" alt="" />
+            </a>
+          </div>
+        </div>
+
+        <!-- TRENDING GAME 4 -->
+        <div class="card" onclick="window.open('booking.html?book=arabic', '_blank')">
+          <img src="images4.png" alt="" />
+          <div class="cardInfo">
+            <div class="cardName">
+              <p>لغة عربية تانية بكالوريا</p>
+              <h3>كتاب الترم الاول-محمد صلاح</h3>
+            </div>
+            <a href="#" class="icon">
+              <img src="images/online-shopping.png" alt="" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+<!-- FOOTER  -->
+    <div class="footerContainer">
+      <div class="footer">
+        copyright &copy; جميع الحقوق محفوظة لسنتر الزيتون التعليمي
+        
+      </div>
+    </div>
+  <script src="script.js"></script>
+  </body>
+</html>

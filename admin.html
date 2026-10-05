@@ -157,6 +157,10 @@ th{color:#777;font-size:11px}
         <option value="">كل الكتب</option>
       </select>
       <button class="secondary" id="reservationRefreshBtn">تحديث</button>
+      <select id="excelBookSelect" class="resToolbarSelect">
+        <option value="">اختر الكتاب للتصدير</option>
+      </select>
+      <button class="secondary" id="exportExcelBtn">📊 تنزيل Excel</button>
       <button class="danger" id="deleteAllReservationsBtn">🗑️ حذف كل الحجوزات</button>
     </div>
 
@@ -183,6 +187,7 @@ th{color:#777;font-size:11px}
     </div>
   </section>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 const SUPABASE_URL = "https://ddqjdcurwlffsmrkcylo.supabase.co";
 const SUPABASE_KEY = "sb_publishable_OuHtmXoZZGqj46tD1Top6A_hmnz5f1o";
@@ -245,6 +250,7 @@ async function loadBooks(){
 
   books = data || [];
   renderBooks();
+  fillExcelBookSelect();
 }
 
 function renderBooks(){
@@ -667,6 +673,149 @@ async function deleteReservation(id){
   await loadReservations();
 }
 
+function getSafeSheetName(name, usedNames){
+  let base = String(name || "كتاب").replace(/[\\\/\?\*\[\]\:]/g, " ").replace(/\s+/g, " ").trim() || "كتاب";
+  base = base.substring(0,31);
+  let finalName=base, counter=2;
+  while(usedNames.has(finalName)){
+    const suffix=` (${counter})`;
+    finalName=base.substring(0,31-suffix.length)+suffix;
+    counter++;
+  }
+  usedNames.add(finalName); return finalName;
+}
+
+function fillExcelBookSelect(){
+  const select = $("excelBookSelect");
+  if(!select) return;
+
+  const current = select.value;
+  select.innerHTML = `<option value="">اختر الكتاب للتصدير</option>` +
+    books.map(book => `
+      <option value="${book.id}">
+        ${escapeHtml(book.book_code || "")} - ${escapeHtml(book.name || "")}
+      </option>
+    `).join("");
+
+  if(current && books.some(book => String(book.id) === String(current))){
+    select.value = current;
+  }
+}
+
+async function exportReservationsExcel(){
+  if(typeof XLSX === "undefined"){
+    alert("لم يتم تحميل أداة Excel. تأكد من اتصال الإنترنت ثم جرّب مرة أخرى.");
+    return;
+  }
+
+  const select = $("excelBookSelect");
+  const selectedBookId = select ? select.value : "";
+
+  if(!selectedBookId){
+    alert("من فضلك اختر الكتاب أولاً.");
+    return;
+  }
+
+  const book = books.find(b => String(b.id) === String(selectedBookId));
+
+  if(!book){
+    alert("الكتاب غير موجود.");
+    return;
+  }
+
+  const btn = $("exportExcelBtn");
+  btn.disabled = true;
+  btn.textContent = "جاري التجهيز...";
+
+  try{
+    const workbook = XLSX.utils.book_new();
+    const usedSheetNames = new Set();
+
+    const sheetName = getSafeSheetName(
+      book.book_code || book.name || "كتاب",
+      usedSheetNames
+    );
+
+    const rows = [[
+      "كود الحجز",
+      "Student ID",
+      "اسم الطالب",
+      "رقم الهاتف",
+      "اسم الكتاب",
+      "كود الكتاب",
+      "اسم المدرس",
+      "رقم الحجز",
+      "حالة الحجز",
+      "تاريخ الحجز"
+    ]];
+
+    reservations
+      .filter(r => String(r.book_id) === String(book.id))
+      .forEach(r => {
+        const profile = r.profile || {};
+        const studentName = r.student_name || profile.full_name || "";
+        const studentCode = profile.student_code || "";
+        const phone = r.phone || profile.phone || "";
+
+        const reservationCode =
+          book.book_code && book.book_code.includes("-")
+            ? `${book.book_code.split("-")[0]}-${String(r.reservation_number || 0).padStart(3,"0")}`
+            : `${book.book_code || ""}-${String(r.reservation_number || 0).padStart(3,"0")}`;
+
+        rows.push([
+          reservationCode,
+          studentCode,
+          studentName,
+          phone,
+          book.name || "",
+          book.book_code || "",
+          book.teacher || "",
+          r.reservation_number || "",
+          r.confirmed ? "مؤكد" : "قيد المراجعة",
+          r.created_at ? new Date(r.created_at).toLocaleString("ar-EG") : ""
+        ]);
+      });
+
+    const worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+    worksheet["!cols"] = [
+      {wch:16},
+      {wch:16},
+      {wch:28},
+      {wch:18},
+      {wch:35},
+      {wch:14},
+      {wch:24},
+      {wch:14},
+      {wch:16},
+      {wch:22}
+    ];
+
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      sheetName
+    );
+
+    const today = new Date().toISOString().slice(0,10);
+    const safeFileName = (book.book_code || "كتاب").replace(/[\\/:*?"<>|]/g, "-");
+
+    XLSX.writeFile(
+      workbook,
+      `حجوزات_${safeFileName}_${today}.xlsx`
+    );
+
+    alert(`تم تنزيل Excel لكتاب ${book.book_code || book.name} بنجاح ✅`);
+
+  }catch(error){
+    console.error(error);
+    alert("حدث خطأ أثناء إنشاء ملف Excel: " + error.message);
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "📊 تنزيل Excel";
+  }
+}
+
 async function deleteAllReservations(){
   if(!reservations.length){
     alert("لا توجد حجوزات لحذفها.");
@@ -709,6 +858,12 @@ $("deleteAllReservationsBtn").addEventListener(
   "click",
   deleteAllReservations
 );
+
+$("exportExcelBtn").addEventListener(
+  "click",
+  exportReservationsExcel
+);
+
 
 $("reservationSearch").addEventListener(
   "input",

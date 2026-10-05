@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>حجوزاتي | Zatune Book Shop</title>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: #f5f7fa;
+        }
+
+        .reservationsPage {
+            min-height: 100vh;
+            padding: 50px 20px;
+            box-sizing: border-box;
+        }
+
+        .reservationsContainer {
+            width: 900px;
+            max-width: 100%;
+            margin: auto;
+        }
+
+        .pageTitle {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .pageTitle h1 {
+            margin: 0;
+            color: #222;
+        }
+
+        .pageTitle p {
+            color: #777;
+            margin-top: 10px;
+        }
+
+        .reservationCard {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .reservationTop {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .bookName {
+            font-size: 20px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .teacherName {
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .reservationCode {
+            background: #0171F9;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            direction: ltr;
+            white-space: nowrap;
+        }
+
+        .reservationInfo {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .emptyBox {
+            background: white;
+            padding: 50px 20px;
+            border-radius: 20px;
+            text-align: center;
+            color: #777;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .loadingBox {
+            text-align: center;
+            color: #0171F9;
+            padding: 40px;
+        }
+
+        .backButton {
+            display: block;
+            width: fit-content;
+            margin: 30px auto 0;
+            text-decoration: none;
+            background: #EE626B;
+            color: white;
+            padding: 13px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+
+            .reservationTop {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .reservationCode {
+                width: 100%;
+                text-align: center;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="reservationsPage">
+
+        <div class="reservationsContainer">
+
+            <div class="pageTitle">
+
+                <h1>حجوزاتي</h1>
+
+                <p>
+                    هنا تقدر تلاقي كل الكتب اللي حجزتها وأكواد الحجز الخاصة بيك
+                </p>
+
+            </div>
+
+
+            <div id="reservationsContainer">
+
+                <div class="loadingBox">
+                    جاري تحميل حجوزاتك...
+                </div>
+
+            </div>
+
+
+            <a href="index.html" class="backButton">
+                العودة للرئيسية
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+
+        // ============================================
+        // SUPABASE
+        // ============================================
+
+        const SUPABASE_URL =
+            "https://ddqjdcurwlffsmrkcylo.supabase.co";
+
+        const SUPABASE_KEY =
+            "sb_publishable_OuHtmXoZZGqj46tD1Top6A_hmnz5f1o";
+
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
+            );
+
+
+        // ============================================
+        // LOAD RESERVATIONS
+        // ============================================
+
+        async function loadMyReservations() {
+
+            const container =
+                document.getElementById(
+                    "reservationsContainer"
+                );
+
+
+            // ============================================
+            // GET LOGGED IN USER
+            // ============================================
+
+            const {
+                data: { session },
+                error: sessionError
+            } =
+                await supabaseClient.auth.getSession();
+
+
+            if (sessionError) {
+
+                console.error(sessionError);
+
+                container.innerHTML = `
+                    <div class="emptyBox">
+                        حدث خطأ أثناء التحقق من تسجيل الدخول.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            if (!session) {
+
+                container.innerHTML = `
+                    <div class="emptyBox">
+
+                        <h3>
+                            يجب تسجيل الدخول أولاً
+                        </h3>
+
+                        <p>
+                            سجل دخولك عشان تشوف حجوزاتك.
+                        </p>
+
+                        <a
+                            href="login.html"
+                            class="backButton"
+                        >
+                            تسجيل الدخول
+                        </a>
+
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            // ============================================
+            // GET RESERVATIONS
+            // ============================================
+
+            const {
+                data: reservations,
+                error: reservationError
+            } =
+                await supabaseClient
+                    .from("reservations")
+                    .select(`
+                        id,
+                        book_id,
+                        reservation_number,
+                        student_name,
+                        phone,
+                        created_at,
+                        confirmed
+                    `)
+                    .eq(
+                        "user_id",
+                        session.user.id
+                    )
+                    .eq(
+                        "confirmed",
+                        true
+                    )
+                    .order(
+                        "created_at",
+                        {
+                            ascending: false
+                        }
+                    );
+
+
+            if (reservationError) {
+
+                console.error(
+                    reservationError
+                );
+
+                container.innerHTML = `
+                    <div class="emptyBox">
+                        حدث خطأ أثناء تحميل الحجوزات.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            // ============================================
+            // NO RESERVATIONS
+            // ============================================
+
+            if (
+                !reservations ||
+                reservations.length === 0
+            ) {
+
+                container.innerHTML = `
+                    <div class="emptyBox">
+
+                        <h3>
+                            لا توجد حجوزات
+                        </h3>
+
+                        <p>
+                            لا توجد حجوزات مؤكدة حتى الآن.
+                            <br>
+                            عند مراجعة الإدارة وتأكيد حجزك سيظهر هنا كود الحجز.
+                        </p>
+
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            // ============================================
+            // GET BOOKS
+            // ============================================
+
+            const bookIds =
+                reservations.map(
+                    reservation =>
+                        reservation.book_id
+                );
+
+
+            const {
+                data: books,
+                error: booksError
+            } =
+                await supabaseClient
+                    .from("books")
+                    .select(
+                        "id, book_code, name, teacher"
+                    )
+                    .in(
+                        "id",
+                        bookIds
+                    );
+
+
+            if (booksError) {
+
+                console.error(
+                    booksError
+                );
+
+                container.innerHTML = `
+                    <div class="emptyBox">
+                        حدث خطأ أثناء تحميل بيانات الكتب.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            // ============================================
+            // CREATE CARDS
+            // ============================================
+
+            container.innerHTML =
+                reservations.map(
+                    reservation => {
+
+                        const book =
+                            books.find(
+                                item =>
+                                    item.id ===
+                                    reservation.book_id
+                            );
+
+
+                        if (!book) {
+                            return "";
+                        }
+
+
+                        const bookCode =
+                            book.book_code ||
+                            "BOOK";
+
+
+                        const reservationCode =
+                            `${bookCode.split("-")[0]}-${String(
+                                reservation.reservation_number
+                            ).padStart(3, "0")}`;
+
+
+                        const reservationDate =
+                            new Date(
+                                reservation.created_at
+                            ).toLocaleDateString(
+                                "ar-EG"
+                            );
+
+
+                        return `
+
+                            <div class="reservationCard">
+
+                                <div class="reservationTop">
+
+                                    <div>
+
+                                        <div class="bookName">
+                                            ${book.name}
+                                        </div>
+
+                                        <div class="teacherName">
+                                            ${book.teacher || ""}
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="reservationCode">
+                                        ${reservationCode}
+                                    </div>
+
+                                </div>
+
+
+                                <div class="reservationInfo">
+
+                                    📚 الكتاب:
+                                    ${book.name}
+
+                                    <br>
+
+                                    👨‍🏫 المدرس:
+                                    ${book.teacher || "غير محدد"}
+
+                                    <br>
+
+                                    📅 تاريخ الحجز:
+                                    ${reservationDate}
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }
+                ).join("");
+
+        }
+
+
+        // ============================================
+        // START
+        // ============================================
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            loadMyReservations
+        );
+
+    </script>
+
+</body>
+
+</html>

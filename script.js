@@ -121,20 +121,36 @@ searchInput.addEventListener("input", function () {
             </span>
 
         `;
-
         item.addEventListener("click", function () {
 
-            searchInput.value =
-                book.category + " " + book.title;
+        searchInput.value =
+             book.category + " " + book.title;
 
-            suggestions.style.display = "none";
+        suggestions.style.display = "none";
 
-            selectedIndex = -1;
+        selectedIndex = -1;
 
-            showOnlyBook(book.card);
+            // إعادة عرض الكتاب من بيانات Supabase
+        searchBooks();
 
-        });
+            // النزول للكتاب بعد ظهوره
+        setTimeout(function () {
 
+            const cards =
+                document.querySelectorAll(".card");
+
+        if (cards.length > 0) {
+
+            cards[0].scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+        }
+
+    }, 100);
+
+});
         suggestions.appendChild(item);
 
     });

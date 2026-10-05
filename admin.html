@@ -97,8 +97,9 @@ th{color:#777;font-size:11px}
           </div>
         </div>
 
-        <label>رابط صورة الكتاب (اختياري)</label>
-        <input id="imageUrl" placeholder="https://...">
+        <label>صورة الكتاب (اختياري)</label>
+        <input id="bookImageFile" type="file" accept="image/*">
+        <div id="bookImagePreview" style="margin-top:10px"></div>
 
         <label style="display:flex;align-items:center;gap:8px">
           <input id="active" type="checkbox" checked style="width:auto;height:auto">
@@ -316,7 +317,10 @@ window.editBook = function(id){
   $("teacher").value = b.teacher || "";
   $("totalQuantity").value = b.total_quantity ?? 0;
   $("availableQuantity").value = b.available_quantity ?? 0;
-  $("imageUrl").value = b.image_url || "";
+  $("bookImageFile").value = "";
+  $("bookImagePreview").innerHTML = b.image_url
+    ? `<img src="${escapeAttribute(b.image_url)}" alt="صورة الكتاب" style="width:90px;height:110px;object-fit:cover;border-radius:10px;border:1px solid #eee">`
+    : "";
   $("active").checked = !!b.active;
 
   clearMsg();
@@ -332,6 +336,18 @@ window.toggleBook = async function(id, active){
   await loadBooks();
 };
 
+$("bookImageFile").addEventListener("change", function(){
+  const file = this.files[0];
+  if(!file){
+    $("bookImagePreview").innerHTML = "";
+    return;
+  }
+  const url = URL.createObjectURL(file);
+  $("bookImagePreview").innerHTML =
+    `<img src="${url}" alt="معاينة صورة الكتاب" style="width:90px;height:110px;object-fit:cover;border-radius:10px;border:1px solid #eee">`;
+});
+
+
 $("bookForm").addEventListener("submit", async e => {
   e.preventDefault();
   clearMsg();
@@ -341,7 +357,7 @@ $("bookForm").addEventListener("submit", async e => {
   const teacher = $("teacher").value.trim();
   const total = Number($("totalQuantity").value);
   const available = Number($("availableQuantity").value);
-  const imageUrl = $("imageUrl").value.trim();
+  const imageFile = $("bookImageFile").files[0] || null;
   const active = $("active").checked;
 
   if(!code || !name){
@@ -355,6 +371,43 @@ $("bookForm").addEventListener("submit", async e => {
   }
 
   $("saveBtn").disabled = true;
+  $("saveBtn").textContent = "جاري رفع الصورة...";
+
+  let imageUrl = editingId
+    ? (books.find(x => x.id === editingId)?.image_url || null)
+    : null;
+
+  if(imageFile){
+    const extension = imageFile.name.includes(".")
+      ? imageFile.name.split(".").pop().toLowerCase()
+      : "jpg";
+
+    const safeExtension = /^[a-z0-9]+$/.test(extension) ? extension : "jpg";
+    const filePath = `books/${Date.now()}-${crypto.randomUUID()}.${safeExtension}`;
+
+    const {error: uploadError} = await client.storage
+      .from("book-images")
+      .upload(filePath, imageFile, {
+        upsert: false,
+        contentType: imageFile.type || "image/jpeg"
+      });
+
+    if(uploadError){
+      console.error(uploadError);
+      $("saveBtn").disabled = false;
+      $("saveBtn").textContent = editingId ? "حفظ التعديلات" : "إضافة الكتاب";
+      showMsg("فشل رفع صورة الكتاب: " + uploadError.message,"err");
+      return;
+    }
+
+    const {data: publicUrlData} = client.storage
+      .from("book-images")
+      .getPublicUrl(filePath);
+
+    imageUrl = publicUrlData?.publicUrl || null;
+  }
+
+  $("saveBtn").textContent = editingId ? "جاري الحفظ..." : "جاري الإضافة...";
   $("saveBtn").textContent = editingId ? "جاري الحفظ..." : "جاري الإضافة...";
 
   let error;
@@ -405,6 +458,7 @@ function resetForm(){
   $("saveBtn").textContent = "إضافة الكتاب";
   $("cancelBtn").style.display = "none";
   $("bookForm").reset();
+  $("bookImagePreview").innerHTML = "";
   $("active").checked = true;
   clearMsg();
 }

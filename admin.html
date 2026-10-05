@@ -194,6 +194,43 @@ const SUPABASE_URL = "https://ddqjdcurwlffsmrkcylo.supabase.co";
 const SUPABASE_KEY = "sb_publishable_OuHtmXoZZGqj46tD1Top6A_hmnz5f1o";
 const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// فتح صورة الطالب في تاب جديدة مع الاحتفاظ بلوحة التحكم في سجل التصفح
+(function openImageFromQuery(){
+  const params = new URLSearchParams(window.location.search);
+  const encodedImage = params.get("open_image");
+
+  if (!encodedImage) return;
+
+  try {
+    const imageUrl = decodeURIComponent(atob(encodedImage));
+
+    // نخلي لوحة التحكم هي الصفحة السابقة للصورة
+    history.replaceState(null, "", window.location.pathname);
+
+    // فتح الصورة بعد تثبيت لوحة التحكم في الـ history
+    window.location.href = imageUrl;
+  } catch (error) {
+    console.error("تعذر فتح الصورة:", error);
+  }
+})();
+
+function openStudentImage(imageUrl){
+  const newTab = window.open("about:blank", "_blank");
+
+  if (!newTab) {
+    alert("السماح بفتح التاب الجديدة مقفول في المتصفح.");
+    return;
+  }
+
+  const dashboardUrl = new URL(window.location.href);
+  dashboardUrl.searchParams.set(
+    "open_image",
+    btoa(encodeURIComponent(imageUrl))
+  );
+
+  newTab.location.href = dashboardUrl.toString();
+}
+
 let books = [];
 let editingId = null;
 let reservations = [];
@@ -628,7 +665,7 @@ function renderReservations(){
 
       const image =
         r.image_url
-          ? `<a href="${escapeAttribute(r.image_url)}" target="_blank">
+          ? `<a href="#" onclick="openStudentImage('${escapeAttribute(r.image_url)}'); return false;">
                <img class="resImage" src="${escapeAttribute(r.image_url)}" alt="صورة الطالب">
              </a>`
           : "-";

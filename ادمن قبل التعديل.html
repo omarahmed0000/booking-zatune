@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zatune | لوحة التحكم</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fb;color:#20242b;font-family:Alexandria,Arial,sans-serif}
+header{background:#0171F9;color:#fff;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;gap:15px}
+header h1{margin:0;font-size:20px}
+header button{border:0;border-radius:12px;padding:11px 17px;background:#fff;color:#0171F9;font-family:inherit;font-weight:700;cursor:pointer}
+.container{width:min(1200px,92%);margin:30px auto}
+.grid{display:grid;grid-template-columns:360px 1fr;gap:22px;align-items:start}
+.box{background:#fff;border-radius:20px;padding:22px;box-shadow:0 8px 30px #0000000c}
+h2{font-size:18px;margin:0 0 18px}
+label{display:block;font-size:12px;font-weight:700;margin:13px 0 7px}
+input{width:100%;height:45px;border:1px solid #ddd;border-radius:11px;padding:0 12px;font-family:inherit;outline:none}
+input:focus{border-color:#0171F9}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions{display:flex;gap:8px;margin-top:18px}
+.primary,.secondary{border:0;border-radius:11px;padding:12px 15px;font-family:inherit;font-weight:700;cursor:pointer}
+.primary{background:#0171F9;color:#fff;flex:1}
+.secondary{background:#eee;color:#333}
+.msg{display:none;margin-top:12px;padding:11px;border-radius:10px;font-size:12px;line-height:1.7}
+.msg.ok{display:block;background:#ecfff3;color:#167847}
+.msg.err{display:block;background:#fff0f1;color:#c62828}
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:15px}
+.toolbar input{flex:1}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:12px 8px;border-bottom:1px solid #eee;text-align:right;vertical-align:middle}
+th{color:#777;font-size:11px}
+.badge{display:inline-block;padding:5px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.active{background:#eafff2;color:#13824a}.hidden{background:#eee;color:#777}
+.smallbtn{border:0;border-radius:8px;padding:7px 9px;font-family:inherit;font-size:10px;font-weight:700;cursor:pointer;background:#eef5ff;color:#0171F9}
+.smallbtn.hide{background:#fff0f1;color:#c62828}
+.empty{text-align:center;color:#888;padding:35px}
+.stat{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap}
+.stat div{background:#f7f9fc;border-radius:12px;padding:11px 14px;font-size:11px}
+.stat b{font-size:17px;display:block;margin-top:3px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}table{min-width:780px}.tableWrap{overflow:auto}.container{width:95%}}
+
+.reservationsBox{margin-top:22px}
+.resToolbar{display:grid;grid-template-columns:1fr 260px auto;gap:10px;margin-bottom:15px}
+.resToolbar select,.resToolbar input{width:100%;height:45px;border:1px solid #ddd;border-radius:11px;padding:0 12px;font-family:inherit;outline:none;background:#fff}
+.resToolbar select:focus,.resToolbar input:focus{border-color:#0171F9}
+.reservationCode{display:inline-block;background:#0171F9;color:#fff;border-radius:8px;padding:6px 9px;font-weight:800;direction:ltr}
+.studentCell{font-weight:700}
+.studentCode{display:block;color:#888;font-size:10px;margin-top:4px}
+.resImage{width:48px;height:48px;border-radius:9px;object-fit:cover;border:1px solid #eee;cursor:pointer}
+.resEmpty{text-align:center;color:#888;padding:35px}
+@media(max-width:900px){
+  .resToolbar{grid-template-columns:1fr}
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📚 لوحة تحكم Zatune Book Shop</h1>
+  <button id="logoutBtn">تسجيل الخروج</button>
+</header>
+
+<div class="container">
+  <div class="grid">
+
+    <section class="box">
+      <h2 id="formTitle">➕ إضافة كتاب جديد</h2>
+
+      <form id="bookForm">
+        <label>كود الكتاب</label>
+        <input id="bookCode" placeholder="مثال: PHY-001" required>
+
+        <label>اسم الكتاب</label>
+        <input id="bookName" placeholder="مثال: فيزياء تالتة ثانوي" required>
+
+        <label>اسم المدرس</label>
+        <input id="teacher" placeholder="مثال: محمد عبدالمعبود">
+
+        <div class="row">
+          <div>
+            <label>إجمالي الكمية</label>
+            <input id="totalQuantity" type="number" min="0" required>
+          </div>
+          <div>
+            <label>المتاح</label>
+            <input id="availableQuantity" type="number" min="0" required>
+          </div>
+        </div>
+
+        <label>رابط صورة الكتاب (اختياري)</label>
+        <input id="imageUrl" placeholder="https://...">
+
+        <label style="display:flex;align-items:center;gap:8px">
+          <input id="active" type="checkbox" checked style="width:auto;height:auto">
+          الكتاب ظاهر للطلاب
+        </label>
+
+        <div class="actions">
+          <button class="primary" type="submit" id="saveBtn">إضافة الكتاب</button>
+          <button class="secondary" type="button" id="cancelBtn" style="display:none">إلغاء</button>
+        </div>
+        <div id="msg" class="msg"></div>
+      </form>
+    </section>
+
+    <section class="box">
+      <div class="toolbar">
+        <input id="search" placeholder="ابحث بكود الكتاب أو الاسم أو المدرس...">
+        <button class="secondary" id="refreshBtn">تحديث</button>
+      </div>
+
+      <div class="stat">
+        <div>عدد الكتب<b id="booksCount">0</b></div>
+        <div>إجمالي النسخ<b id="totalCount">0</b></div>
+        <div>المتاح<b id="availableCount">0</b></div>
+        <div>المحجوز<b id="reservedCount">0</b></div>
+      </div>
+
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>الكود</th>
+              <th>الكتاب</th>
+              <th>المدرس</th>
+              <th>الإجمالي</th>
+              <th>المتاح</th>
+              <th>الحالة</th>
+              <th>إجراء</th>
+            </tr>
+          </thead>
+          <tbody id="booksBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+
+  <section class="box reservationsBox">
+    <h2>📋 حجوزات الطلاب</h2>
+
+    <div class="resToolbar">
+      <input id="reservationSearch" placeholder="ابحث باسم الطالب أو Student ID أو الهاتف أو كود الحجز...">
+      <select id="reservationBookFilter">
+        <option value="">كل الكتب</option>
+      </select>
+      <button class="secondary" id="reservationRefreshBtn">تحديث</button>
+    </div>
+
+    <div class="stat">
+      <div>إجمالي الحجوزات<b id="reservationsCount">0</b></div>
+      <div>عدد الطلاب<b id="reservationStudentsCount">0</b></div>
+    </div>
+
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>كود الحجز</th>
+            <th>الطالب</th>
+            <th>الكتاب</th>
+            <th>الهاتف</th>
+            <th>الصورة</th>
+            <th>التاريخ</th>
+          </tr>
+        </thead>
+        <tbody id="reservationsBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+<script>
+const SUPABASE_URL = "https://ddqjdcurwlffsmrkcylo.supabase.co";
+const SUPABASE_KEY = "sb_publishable_OuHtmXoZZGqj46tD1Top6A_hmnz5f1o";
+const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let books = [];
+let editingId = null;
+let reservations = [];
+let profilesMap = new Map();
+
+const $ = id => document.getElementById(id);
+const msg = $("msg");
+
+function showMsg(text, type="ok"){
+  msg.textContent = text;
+  msg.className = "msg " + type;
+}
+
+function clearMsg(){ msg.className = "msg"; }
+
+async function requireAdmin(){
+  const {data:{user}} = await client.auth.getUser();
+
+  if(!user){
+    location.href = "login.html";
+    return null;
+  }
+
+  const {data:admin, error} = await client
+    .from("admin_users")
+    .select("id")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if(error || !admin){
+    document.body.innerHTML = `
+      <div style="min-height:100vh;display:grid;place-items:center;padding:25px;text-align:center;font-family:Arial">
+        <div>
+          <h2>⛔ ليس لديك صلاحية دخول لوحة التحكم</h2>
+          <p>تأكد أن UUID الخاص بحسابك تمت إضافته إلى جدول admin_users.</p>
+          <a href="index.html">العودة للرئيسية</a>
+        </div>
+      </div>`;
+    return null;
+  }
+
+  return user;
+}
+
+async function loadBooks(){
+  const {data,error} = await client
+    .from("books")
+    .select("*")
+    .order("id",{ascending:true});
+
+  if(error){
+    showMsg(error.message,"err");
+    return;
+  }
+
+  books = data || [];
+  renderBooks();
+}
+
+function renderBooks(){
+  const q = $("search").value.trim().toLowerCase();
+
+  const filtered = books.filter(b =>
+    (b.book_code || "").toLowerCase().includes(q) ||
+    (b.name || "").toLowerCase().includes(q) ||
+    (b.teacher || "").toLowerCase().includes(q)
+  );
+
+  $("booksCount").textContent = books.length;
+  $("totalCount").textContent = books.reduce((s,b)=>s + Number(b.total_quantity||0),0);
+  $("availableCount").textContent = books.reduce((s,b)=>s + Number(b.available_quantity||0),0);
+  $("reservedCount").textContent = books.reduce((s,b)=>s + Math.max(0,Number(b.total_quantity||0)-Number(b.available_quantity||0)),0);
+
+  if(!filtered.length){
+    $("booksBody").innerHTML = `<tr><td colspan="7" class="empty">لا توجد كتب</td></tr>`;
+    return;
+  }
+
+  $("booksBody").innerHTML = filtered.map(b => {
+    const reserved = Math.max(0,Number(b.total_quantity||0)-Number(b.available_quantity||0));
+    return `
+      <tr>
+        <td><b>${escapeHtml(b.book_code || "")}</b></td>
+        <td>${escapeHtml(b.name || "")}<br><small style="color:#999">محجوز: ${reserved}</small></td>
+        <td>${escapeHtml(b.teacher || "-")}</td>
+        <td>${Number(b.total_quantity||0)}</td>
+        <td><b>${Number(b.available_quantity||0)}</b></td>
+        <td>
+          <span class="badge ${b.active ? "active":"hidden"}">
+            ${b.active ? "ظاهر":"مخفي"}
+          </span>
+        </td>
+        <td>
+          <button class="smallbtn" onclick="editBook(${b.id})">تعديل</button>
+          <button class="smallbtn hide" onclick="toggleBook(${b.id},${!b.active})">
+            ${b.active ? "إخفاء":"إظهار"}
+          </button>
+        </td>
+      </tr>`;
+  }).join("");
+}
+
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g, m => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+}
+
+window.editBook = function(id){
+  const b = books.find(x => x.id === id);
+  if(!b) return;
+
+  editingId = id;
+  $("formTitle").textContent = "✏️ تعديل الكتاب";
+  $("saveBtn").textContent = "حفظ التعديلات";
+  $("cancelBtn").style.display = "block";
+
+  $("bookCode").value = b.book_code || "";
+  $("bookName").value = b.name || "";
+  $("teacher").value = b.teacher || "";
+  $("totalQuantity").value = b.total_quantity ?? 0;
+  $("availableQuantity").value = b.available_quantity ?? 0;
+  $("imageUrl").value = b.image_url || "";
+  $("active").checked = !!b.active;
+
+  clearMsg();
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.toggleBook = async function(id, active){
+  const {error} = await client.from("books").update({active}).eq("id",id);
+
+  if(error){ showMsg(error.message,"err"); return; }
+
+  showMsg(active ? "تم إظهار الكتاب ✅" : "تم إخفاء الكتاب ✅");
+  await loadBooks();
+};
+
+$("bookForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  clearMsg();
+
+  const code = $("bookCode").value.trim().toUpperCase();
+  const name = $("bookName").value.trim();
+  const teacher = $("teacher").value.trim();
+  const total = Number($("totalQuantity").value);
+  const available = Number($("availableQuantity").value);
+  const imageUrl = $("imageUrl").value.trim();
+  const active = $("active").checked;
+
+  if(!code || !name){
+    showMsg("كود الكتاب واسم الكتاب مطلوبان.","err");
+    return;
+  }
+
+  if(total < 0 || available < 0 || available > total){
+    showMsg("الكمية المتاحة لازم تكون بين 0 وإجمالي الكمية.","err");
+    return;
+  }
+
+  $("saveBtn").disabled = true;
+  $("saveBtn").textContent = editingId ? "جاري الحفظ..." : "جاري الإضافة...";
+
+  let error;
+
+  if(editingId){
+    ({error} = await client.from("books").update({
+      book_code: code,
+      name,
+      teacher: teacher || null,
+      total_quantity: total,
+      available_quantity: available,
+      image_url: imageUrl || null,
+      active
+    }).eq("id", editingId));
+  }else{
+    ({error} = await client.from("books").insert({
+      book_code: code,
+      name,
+      teacher: teacher || null,
+      total_quantity: total,
+      available_quantity: total,
+      image_url: imageUrl || null,
+      active
+    }));
+  }
+
+  $("saveBtn").disabled = false;
+  $("saveBtn").textContent = editingId ? "حفظ التعديلات" : "إضافة الكتاب";
+
+  if(error){
+    if(error.code === "23505")
+      showMsg("كود الكتاب مستخدم بالفعل. اختار كود مختلف.","err");
+    else
+      showMsg(error.message,"err");
+    return;
+  }
+
+  showMsg(editingId ? "تم تعديل الكتاب بنجاح ✅" : "تمت إضافة الكتاب بنجاح ✅");
+  resetForm();
+  await loadBooks();
+});
+
+$("cancelBtn").addEventListener("click", resetForm);
+
+function resetForm(){
+  editingId = null;
+  $("formTitle").textContent = "➕ إضافة كتاب جديد";
+  $("saveBtn").textContent = "إضافة الكتاب";
+  $("cancelBtn").style.display = "none";
+  $("bookForm").reset();
+  $("active").checked = true;
+  clearMsg();
+}
+
+$("search").addEventListener("input", renderBooks);
+$("refreshBtn").addEventListener("click", loadBooks);
+
+$("logoutBtn").addEventListener("click", async()=>{
+  await client.auth.signOut();
+  location.href = "login.html";
+});
+
+
+async function loadReservations(){
+  const [
+    {data: reservationData, error: reservationError},
+    {data: profileData, error: profileError},
+    {data: bookData, error: bookError}
+  ] = await Promise.all([
+    client
+      .from("reservations")
+      .select("id,user_id,book_id,reservation_number,student_name,phone,image_url,created_at")
+      .order("created_at",{ascending:false}),
+
+    client
+      .from("profiles")
+      .select("id,student_code,full_name,phone"),
+
+    client
+      .from("books")
+      .select("id,book_code,name,teacher")
+  ]);
+
+  if(reservationError){
+    console.error(reservationError);
+    showReservationMessage(reservationError.message);
+    return;
+  }
+
+  if(profileError){
+    console.error("Profiles error:", profileError);
+  }
+
+  if(bookError){
+    console.error("Books error:", bookError);
+  }
+
+  profilesMap = new Map((profileData || []).map(p => [p.id,p]));
+
+  const booksMap = new Map((bookData || []).map(b => [b.id,b]));
+  window.adminBooksMap = booksMap;
+
+  reservations = (reservationData || []).map(r => ({
+    ...r,
+    profile: profilesMap.get(r.user_id) || null,
+    book: booksMap.get(r.book_id) || null
+  }));
+
+  fillReservationBookFilter();
+  renderReservations();
+}
+
+function showReservationMessage(message){
+  $("reservationsBody").innerHTML =
+    `<tr><td colspan="6" class="resEmpty">${escapeHtml(message)}</td></tr>`;
+}
+
+function fillReservationBookFilter(){
+  const select = $("reservationBookFilter");
+  const current = select.value;
+
+  const usedBookIds = [...new Set(reservations.map(r => r.book_id))];
+
+  select.innerHTML =
+    `<option value="">كل الكتب</option>` +
+    usedBookIds.map(id => {
+      const b = window.adminBooksMap?.get(id);
+      if(!b) return "";
+      return `<option value="${id}">
+        ${escapeHtml(b.book_code || "")} - ${escapeHtml(b.name || "")}
+      </option>`;
+    }).join("");
+
+  if(current && usedBookIds.includes(Number(current))){
+    select.value = current;
+  }
+}
+
+function renderReservations(){
+  const q = $("reservationSearch").value.trim().toLowerCase();
+  const bookFilter = $("reservationBookFilter").value;
+
+  const filtered = reservations.filter(r => {
+    const profile = r.profile || {};
+    const book = r.book || {};
+
+    const studentCode = profile.student_code || "";
+    const studentName = r.student_name || profile.full_name || "";
+    const phone = r.phone || profile.phone || "";
+    const bookCode = book.book_code || "";
+    const bookName = book.name || "";
+
+    const reservationCode =
+      bookCode.includes("-")
+        ? `${bookCode.split("-")[0]}-${String(r.reservation_number || 0).padStart(3,"0")}`
+        : "";
+
+    const matchesSearch =
+      !q ||
+      studentName.toLowerCase().includes(q) ||
+      studentCode.toLowerCase().includes(q) ||
+      phone.toLowerCase().includes(q) ||
+      reservationCode.toLowerCase().includes(q) ||
+      bookCode.toLowerCase().includes(q) ||
+      bookName.toLowerCase().includes(q);
+
+    const matchesBook =
+      !bookFilter ||
+      String(r.book_id) === String(bookFilter);
+
+    return matchesSearch && matchesBook;
+  });
+
+  $("reservationsCount").textContent = filtered.length;
+
+  const uniqueStudents = new Set(
+    filtered.map(r => r.user_id).filter(Boolean)
+  );
+
+  $("reservationStudentsCount").textContent =
+    uniqueStudents.size;
+
+  if(!filtered.length){
+    $("reservationsBody").innerHTML =
+      `<tr><td colspan="6" class="resEmpty">لا توجد حجوزات</td></tr>`;
+    return;
+  }
+
+  $("reservationsBody").innerHTML =
+    filtered.map(r => {
+
+      const profile = r.profile || {};
+      const book = r.book || {};
+
+      const studentName =
+        r.student_name ||
+        profile.full_name ||
+        "غير معروف";
+
+      const studentCode =
+        profile.student_code ||
+        "غير متوفر";
+
+      const bookCode =
+        book.book_code ||
+        "غير متوفر";
+
+      const reservationCode =
+        bookCode.includes("-")
+          ? `${bookCode.split("-")[0]}-${String(r.reservation_number || 0).padStart(3,"0")}`
+          : `${bookCode}-${String(r.reservation_number || 0).padStart(3,"0")}`;
+
+      const date =
+        r.created_at
+          ? new Date(r.created_at).toLocaleString("ar-EG")
+          : "-";
+
+      const image =
+        r.image_url
+          ? `<a href="${escapeAttribute(r.image_url)}" target="_blank">
+               <img class="resImage" src="${escapeAttribute(r.image_url)}" alt="صورة الطالب">
+             </a>`
+          : "-";
+
+      return `
+        <tr>
+          <td>
+            <span class="reservationCode">
+              ${escapeHtml(reservationCode)}
+            </span>
+          </td>
+
+          <td class="studentCell">
+            ${escapeHtml(studentName)}
+            <span class="studentCode">
+              ${escapeHtml(studentCode)}
+            </span>
+          </td>
+
+          <td>
+            <b>${escapeHtml(bookCode)}</b><br>
+            <span style="color:#777;font-size:10px">
+              ${escapeHtml(book.name || "غير معروف")}
+            </span>
+          </td>
+
+          <td>
+            ${escapeHtml(r.phone || profile.phone || "-")}
+          </td>
+
+          <td>
+            ${image}
+          </td>
+
+          <td>
+            ${escapeHtml(date)}
+          </td>
+        </tr>
+      `;
+    }).join("");
+}
+
+function escapeAttribute(value){
+  return String(value).replace(/["'<>]/g, "");
+}
+
+$("reservationSearch").addEventListener(
+  "input",
+  renderReservations
+);
+
+$("reservationBookFilter").addEventListener(
+  "change",
+  renderReservations
+);
+
+$("reservationRefreshBtn").addEventListener(
+  "click",
+  loadReservations
+);
+
+
+(async()=>{
+  const user = await requireAdmin();
+  if(user){
+    await loadBooks();
+    await loadReservations();
+  }
+})();
+</script>
+</body>
+</html>

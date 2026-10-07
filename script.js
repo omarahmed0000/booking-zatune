@@ -3,7 +3,6 @@
 // ============================================
 
 const searchInput = document.getElementById("searchInput");
-
 const suggestions = document.getElementById("suggestions");
 
 let selectedIndex = -1;
@@ -77,9 +76,7 @@ searchInput.addEventListener("input", function () {
         const cards = document.querySelectorAll(".card");
 
         cards.forEach(function (card) {
-
             card.style.display = "";
-
         });
 
         return;
@@ -109,48 +106,44 @@ searchInput.addEventListener("input", function () {
         item.innerHTML = `
 
             <span class="suggestionCategory">
-
                 ${book.category}
-
             </span>
 
             <span class="suggestionTitle">
-
                 ${book.title}
-
             </span>
 
         `;
+
         item.addEventListener("click", function () {
 
-        searchInput.value =
-             book.category + " " + book.title;
+            searchInput.value =
+                book.category + " " + book.title;
 
-        suggestions.style.display = "none";
+            suggestions.style.display = "none";
 
-        selectedIndex = -1;
+            selectedIndex = -1;
 
-            // إعادة عرض الكتاب من بيانات Supabase
-        searchBooks();
+            searchBooks();
 
-            // النزول للكتاب بعد ظهوره
-        setTimeout(function () {
+            setTimeout(function () {
 
-            const cards =
-                document.querySelectorAll(".card");
+                const cards =
+                    document.querySelectorAll(".card");
 
-        if (cards.length > 0) {
+                if (cards.length > 0) {
 
-            cards[0].scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
+                    cards[0].scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
 
-        }
+                }
 
-    }, 100);
+            }, 100);
 
-});
+        });
+
         suggestions.appendChild(item);
 
     });
@@ -184,6 +177,7 @@ searchInput.addEventListener("keydown", function (event) {
         }
 
         updateSelection(items);
+
     }
 
     else if (event.key === "ArrowUp") {
@@ -201,6 +195,7 @@ searchInput.addEventListener("keydown", function (event) {
         }
 
         updateSelection(items);
+
     }
 
     else if (event.key === "Enter") {
@@ -259,31 +254,6 @@ function updateSelection(items) {
 
 
 // ============================================
-// SHOW ONLY SELECTED BOOK
-// ============================================
-
-function showOnlyBook(selectedCard) {
-
-    const cards = document.querySelectorAll(".card");
-
-    cards.forEach(function (card) {
-
-        if (card === selectedCard) {
-
-            card.style.display = "";
-
-        } else {
-
-            card.style.display = "none";
-
-        }
-
-    });
-
-}
-
-
-// ============================================
 // NORMAL SEARCH
 // ============================================
 
@@ -298,9 +268,7 @@ function searchBooks() {
     if (searchText === "") {
 
         cards.forEach(function (card) {
-
             card.style.display = "";
-
         });
 
         suggestions.style.display = "none";
@@ -313,9 +281,7 @@ function searchBooks() {
     const words = searchText
         .split(/\s+/)
         .filter(function (word) {
-
             return word !== "";
-
         });
 
     cards.forEach(function (card) {
@@ -332,13 +298,9 @@ function searchBooks() {
         });
 
         if (found) {
-
             card.style.display = "";
-
         } else {
-
             card.style.display = "none";
-
         }
 
     });
@@ -409,9 +371,7 @@ async function loadBooks() {
 
         container.innerHTML = `
             <div style="width:100%;text-align:center;padding:40px;">
-
                 حدث خطأ أثناء تحميل الكتب
-
             </div>
         `;
 
@@ -438,9 +398,7 @@ function renderBooks(books) {
 
         container.innerHTML = `
             <div style="width:100%;text-align:center;padding:40px;">
-
                 لا توجد كتب متاحة حاليًا
-
             </div>
         `;
 
@@ -600,20 +558,16 @@ loadBooks();
 
 
 // ==========================================
-// LOGIN BUTTON
+// LOGIN / ACCOUNT BUTTON
 // ==========================================
 
 async function setupLoginButton() {
 
     const loginButton =
-        document.querySelector(".headerLinks .btn");
+        document.getElementById("loginButton");
 
     if (!loginButton) return;
 
-
-    // ==========================================
-    // GET CURRENT USER
-    // ==========================================
 
     const {
         data: { user },
@@ -627,11 +581,13 @@ async function setupLoginButton() {
 
     if (error || !user) {
 
-        loginButton.textContent = "سجل دخولك";
+        loginButton.textContent =
+            "سجل دخولك";
 
         loginButton.onclick = function () {
 
-            window.location.href = "login.html";
+            window.location.href =
+                "login.html";
 
         };
 
@@ -643,63 +599,18 @@ async function setupLoginButton() {
     // LOGGED IN
     // ==========================================
 
-    const { data: profile } =
-        await supabaseClient
-            .from("profiles")
-            .select("full_name")
-            .eq("id", user.id)
-            .maybeSingle();
+    loginButton.textContent =
+        "👤 حسابي";
 
+    loginButton.onclick = function () {
 
-    // ==========================================
-    // GET STUDENT NAME
-    // ==========================================
-
-    const userName =
-        profile?.full_name ||
-        user.user_metadata?.full_name ||
-        user.user_metadata?.name ||
-        "حسابي";
-
-
-    // ==========================================
-    // SHOW STUDENT NAME
-    // ==========================================
-
-    loginButton.textContent = userName;
-
-
-    // ==========================================
-    // LOGOUT WHEN CLICKING NAME
-    // ==========================================
-
-    loginButton.onclick = async function () {
-
-        const { error } =
-            await supabaseClient.auth.signOut();
-
-        if (error) {
-
-            console.error(error);
-
-            alert("حدث خطأ أثناء تسجيل الخروج");
-
-            return;
-        }
-
-
-        // تحديث الصفحة
-
-        location.reload();
+        window.location.href =
+            "my-account.html";
 
     };
 
 }
 
-
-// ==========================================
-// RUN LOGIN CHECK
-// ==========================================
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -707,16 +618,129 @@ document.addEventListener(
 );
 
 
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", async () => {
-        try {
-            const registration = await navigator.serviceWorker.register(
-                "/service-worker.js"
-            );
+// ==========================================
+// DARK / LIGHT MODE
+// ==========================================
 
-            console.log("Service Worker registered:", registration.scope);
-        } catch (error) {
-            console.error("Service Worker registration failed:", error);
+function setupThemeToggle() {
+
+    const themeToggle =
+        document.getElementById("themeToggle");
+
+    const themeIcon =
+        document.getElementById("themeIcon");
+
+    if (!themeToggle) return;
+
+
+    // Light هو الوضع الافتراضي
+    // حتى لو الجهاز نفسه Dark
+
+    const savedTheme =
+        localStorage.getItem("zatune-theme");
+
+
+    if (savedTheme === "dark") {
+
+        document.body.classList.add("dark-mode");
+
+        if (themeIcon) {
+            themeIcon.textContent = "🌙";
         }
-    });
+
+    } else {
+
+        document.body.classList.remove("dark-mode");
+
+        if (themeIcon) {
+            themeIcon.textContent = "☀️";
+        }
+
+    }
+
+
+    // ==========================================
+    // TOGGLE
+    // ==========================================
+
+    themeToggle.addEventListener(
+        "click",
+        function () {
+
+            const isDark =
+                document.body.classList.toggle(
+                    "dark-mode"
+                );
+
+
+            if (isDark) {
+
+                localStorage.setItem(
+                    "zatune-theme",
+                    "dark"
+                );
+
+                if (themeIcon) {
+                    themeIcon.textContent = "🌙";
+                }
+
+            } else {
+
+                localStorage.setItem(
+                    "zatune-theme",
+                    "light"
+                );
+
+                if (themeIcon) {
+                    themeIcon.textContent = "☀️";
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    setupThemeToggle
+);
+
+
+// ==========================================
+// SERVICE WORKER
+// ==========================================
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener(
+        "load",
+        async () => {
+
+            try {
+
+                const registration =
+                    await navigator.serviceWorker.register(
+                        "/service-worker.js"
+                    );
+
+                console.log(
+                    "Service Worker registered:",
+                    registration.scope
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Service Worker registration failed:",
+                    error
+                );
+
+            }
+
+        }
+    );
+
 }

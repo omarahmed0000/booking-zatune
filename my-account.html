@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حسابي | Zatune Book Shop</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@200..900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{background:#f7f8fc;font-family:"Alexandria",sans-serif;margin:0;color:#222}
+.accountPage{width:min(1000px,92%);margin:50px auto}
+.accountTop{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}
+.accountTop h1{margin:0;font-size:28px}
+.accountBtn{border:0;border-radius:50px;padding:13px 22px;background:#0171F9;color:#fff;font-family:inherit;font-weight:700;cursor:pointer}
+.accountCard{background:#fff;border-radius:25px;padding:25px;box-shadow:0 12px 35px rgba(0,0,0,.08);margin-bottom:20px}
+.infoGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.infoItem{background:#f5f7fb;border-radius:15px;padding:16px}
+.infoItem span{display:block;color:#777;font-size:12px;margin-bottom:7px}
+.infoItem strong{font-size:15px;word-break:break-word}
+.reservation{border:1px solid #eee;border-radius:18px;padding:18px;margin-top:12px}
+.reservation h3{margin:0 0 10px}
+.status{display:inline-block;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700}
+.status.ok{background:#e8fff1;color:#168044}
+.status.wait{background:#fff4df;color:#a86600}
+.empty{text-align:center;color:#777;padding:25px}
+.loading{text-align:center;padding:40px}
+body.dark-mode{background:#111827;color:#f3f4f6}
+body.dark-mode .accountCard{background:#1f2937}
+body.dark-mode .infoItem{background:#374151}
+body.dark-mode .infoItem span{color:#c4cad3}
+body.dark-mode .reservation{border-color:#4b5563}
+.whatsappAccount{position:fixed;left:20px;bottom:20px;background:#20d66b;color:#fff;text-decoration:none;padding:13px 18px;border-radius:50px;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,.2)}
+@media(max-width:600px){.accountPage{margin:25px auto}.accountTop{flex-direction:column;align-items:stretch}.accountTop h1{text-align:center}.infoGrid{grid-template-columns:1fr}.whatsappAccount{left:50%;transform:translateX(-50%);white-space:nowrap}}
+</style>
+</head>
+<body>
+<div class="accountPage">
+  <div class="accountTop">
+    <h1>👤 حسابي</h1>
+    <button class="accountBtn" id="backBtn">العودة للرئيسية</button>
+  </div>
+
+  <div id="accountContent" class="loading">جاري تحميل بيانات الحساب...</div>
+</div>
+
+<a class="whatsappAccount" href="https://wa.me/201007428701" target="_blank" rel="noopener">
+  💬 التواصل مع الإدارة
+</a>
+
+<script>
+const SUPABASE_URL="https://ddqjdcurwlffsmrkcylo.supabase.co";
+const SUPABASE_KEY="sb_publishable_OuHtmXoZZGqj46tD1Top6A_hmnz5f1o";
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+document.getElementById("backBtn").onclick=()=>location.href="index.html";
+
+function formatDate(value){
+  if(!value) return "غير متاح";
+  return new Date(value).toLocaleDateString("ar-EG",{year:"numeric",month:"long",day:"numeric"});
+}
+
+function setupTheme(){
+  const saved=localStorage.getItem("zatune-theme");
+  if(saved==="dark") document.body.classList.add("dark-mode");
+}
+setupTheme();
+
+async function loadAccount(){
+  const {data:{user},error}=await client.auth.getUser();
+
+  if(error || !user){
+    location.href="login.html";
+    return;
+  }
+
+  const profileResult=await client
+    .from("profiles")
+    .select("full_name,phone,student_code,created_at")
+    .eq("id",user.id)
+    .maybeSingle();
+
+  const profile=profileResult.data || {};
+
+  const reservationsResult=await client
+    .from("reservations")
+    .select(`
+      id,
+      reservation_number,
+      created_at,
+      confirmed,
+      student_name,
+      phone,
+      book_id,
+      books (
+        name,
+        teacher,
+        book_code
+      )
+    `)
+    .eq("user_id",user.id)
+    .order("created_at",{ascending:false});
+
+  const reservations=reservationsResult.data || [];
+
+  const name=profile.full_name || user.user_metadata?.full_name || user.user_metadata?.name || "غير متاح";
+  const phone=profile.phone || user.user_metadata?.phone || "غير متاح";
+  const studentCode=profile.student_code || "غير متاح";
+
+  let reservationsHtml="";
+
+  if(reservationsResult.error){
+    console.error(reservationsResult.error);
+    reservationsHtml='<div class="empty">تعذر تحميل الحجوزات حاليًا.</div>';
+  }else if(!reservations.length){
+    reservationsHtml='<div class="empty">لا توجد حجوزات حتى الآن.</div>';
+  }else{
+    reservationsHtml=reservations.map(r=>{
+      const book=r.books || {};
+      return `
+        <div class="reservation">
+          <h3>📚 ${book.name || "كتاب"}</h3>
+          <div>المدرس: ${book.teacher || "غير متاح"}</div>
+          <div>كود الكتاب: ${book.book_code || "غير متاح"}</div>
+          <div>رقم الحجز: ${r.reservation_number ?? "غير متاح"}</div>
+          <div>تاريخ الحجز: ${formatDate(r.created_at)}</div>
+          <div style="margin-top:10px">
+            <span class="status ${r.confirmed ? "ok" : "wait"}">
+              ${r.confirmed ? "✅ مؤكد" : "⏳ في انتظار التأكيد"}
+            </span>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  document.getElementById("accountContent").innerHTML=`
+    <div class="accountCard">
+      <h2>بيانات الحساب</h2>
+      <div class="infoGrid">
+        <div class="infoItem"><span>اسم الطالب</span><strong>${name}</strong></div>
+        <div class="infoItem"><span>رقم الهاتف</span><strong>${phone}</strong></div>
+        <div class="infoItem"><span>كود الطالب</span><strong>${studentCode}</strong></div>
+        <div class="infoItem"><span>تاريخ إنشاء الحساب</span><strong>${formatDate(user.created_at)}</strong></div>
+      </div>
+    </div>
+
+    <div class="accountCard">
+      <h2>📚 حجوزاتي</h2>
+      ${reservationsHtml}
+    </div>
+
+    <div class="accountCard" style="text-align:center">
+      <button class="accountBtn" id="logoutBtn">🚪 تسجيل الخروج</button>
+    </div>
+  `;
+
+  document.getElementById("logoutBtn").onclick=async()=>{
+    const {error}=await client.auth.signOut();
+    if(error){alert("حدث خطأ أثناء تسجيل الخروج");return;}
+    location.href="login.html";
+  };
+}
+
+loadAccount();
+</script>
+</body>
+</html>

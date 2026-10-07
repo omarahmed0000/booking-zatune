@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Zatune | الحسابات</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap"
+rel="stylesheet"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+    box-sizing:border-box
+}
+
+html,body,button,input{
+    font-family:Alexandria,Arial,sans-serif!important
+}
+
+body{
+    margin:0;
+    background:#f5f7fb;
+    color:#20242b
+}
+
+header{
+    background:#0171F9;
+    color:#fff;
+    padding:18px 5%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px
+}
+
+header h1{
+    margin:0;
+    font-size:20px
+}
+
+header button,
+.secondary,
+.primary,
+.danger{
+    border:0;
+    border-radius:10px;
+    padding:10px 14px;
+    font-family:inherit;
+    font-weight:700;
+    cursor:pointer
+}
+
+.container{
+    width:min(1200px,92%);
+    margin:30px auto
+}
+
+.box{
+    background:#fff;
+    border-radius:20px;
+    padding:22px;
+    box-shadow:0 8px 30px #0000000c
+}
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px
+}
+
+.stats{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:15px
+}
+
+.stat{
+    background:#f7f9fc;
+    border-radius:12px;
+    padding:11px 15px;
+    font-size:11px
+}
+
+.stat b{
+    display:block;
+    font-size:18px;
+    margin-top:3px
+}
+
+.toolbar{
+    margin-bottom:15px
+}
+
+.toolbar input{
+    width:100%;
+    height:45px;
+    border:1px solid #ddd;
+    border-radius:11px;
+    padding:0 12px;
+    outline:none
+}
+
+.tableWrap{
+    overflow:auto
+}
+
+table{
+    width:100%;
+    min-width:1050px;
+    border-collapse:collapse;
+    font-size:12px
+}
+
+th,
+td{
+    padding:12px 8px;
+    border-bottom:1px solid #eee;
+    text-align:right
+}
+
+th{
+    color:#777;
+    font-size:11px
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:700
+}
+
+.active{
+    background:#eafff2;
+    color:#13824a
+}
+
+.inactive{
+    background:#fff0f1;
+    color:#c62828
+}
+
+.btn{
+    border:0;
+    border-radius:8px;
+    padding:7px 9px;
+    font-family:inherit;
+    font-size:10px;
+    font-weight:700;
+    cursor:pointer;
+    margin:2px
+}
+
+.password{
+    background:#eef5ff;
+    color:#0171F9
+}
+
+.block{
+    background:#fff0f1;
+    color:#c62828
+}
+
+.unblock{
+    background:#eafff2;
+    color:#13824a
+}
+
+.delete{
+    background:#fff0f1;
+    color:#c62828
+}
+
+.empty{
+    text-align:center;
+    color:#888;
+    padding:35px
+}
+
+.msg{
+    display:none;
+    margin:10px 0;
+    padding:11px;
+    border-radius:10px;
+    font-size:12px
+}
+
+.msg.ok{
+    display:block;
+    background:#ecfff3;
+    color:#167847
+}
+
+.msg.err{
+    display:block;
+    background:#fff0f1;
+    color:#c62828
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0008;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:10
+}
+
+.modal.show{
+    display:flex
+}
+
+.modalBox{
+    background:#fff;
+    width:min(420px,100%);
+    padding:22px;
+    border-radius:18px
+}
+
+.modalBox h3{
+    margin:0 0 8px
+}
+
+.modalBox p{
+    font-size:11px;
+    color:#777
+}
+
+.modalBox input{
+    width:100%;
+    height:45px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:0 12px
+}
+
+.modalActions{
+    display:flex;
+    gap:8px;
+    margin-top:14px
+}
+
+.modalActions button{
+    flex:1
+}
+
+.primary{
+    background:#0171F9;
+    color:#fff
+}
+
+.secondary{
+    background:#eee;
+    color:#333
+}
+
+.danger{
+    background:#fff;
+    color:#0171F9
+}
+
+@media(max-width:700px){
+
+    header h1{
+        font-size:16px
+    }
+
+    .container{
+        width:94%;
+        margin:18px auto
+    }
+
+    .box{
+        padding:16px
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>👥 حسابات الطلاب</h1>
+
+<div>
+
+<button
+class="danger"
+onclick="location.href='admin.html'"
+>
+⬅️ لوحة التحكم
+</button>
+
+<button
+class="danger"
+id="logoutBtn"
+>
+تسجيل الخروج
+</button>
+
+</div>
+
+</header>
+
+
+<div class="container">
+
+<section class="box">
+
+<div class="top">
+
+<h2>جميع الحسابات المسجلة</h2>
+
+<button
+class="secondary"
+id="refreshBtn"
+>
+تحديث
+</button>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+إجمالي الحسابات
+<b id="total">0</b>
+</div>
+
+<div class="stat">
+الحسابات النشطة
+<b id="active">0</b>
+</div>
+
+<div class="stat">
+لديها تسجيل دخول
+<b id="logged">0</b>
+</div>
+
+</div>
+
+
+<div
+id="msg"
+class="msg"
+></div>
+
+
+<div class="toolbar">
+
+<input
+id="search"
+placeholder="🔍 ابحث بالاسم أو الهاتف أو Student ID..."
+>
+
+</div>
+
+
+<div class="tableWrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>الاسم</th>
+
+<th>Student ID</th>
+
+<th>الهاتف</th>
+
+<th>تاريخ التسجيل</th>
+
+<th>آخر دخول</th>
+
+<th>الحالة</th>
+
+<th>الإجراء</th>
+
+</tr>
+
+</thead>
+
+<tbody id="body">
+
+<tr>
+
+<td
+colspan="7"
+class="empty"
+>
+جاري التحميل...
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- PASSWORD MODAL -->
+
+<div
+class="modal"
+id="modal"
+>
+
+<div class="modalBox">
+
+<h3>
+🔑 تغيير كلمة المرور
+</h3>
+
+<p id="student"></p>
+
+<input
+id="password"
+type="password"
+minlength="6"
+placeholder="كلمة المرور الجديدة"
+autocomplete="new-password"
+>
+
+<div class="modalActions">
+
+<button
+class="primary"
+id="save"
+>
+حفظ
+</button>
+
+<button
+class="secondary"
+id="cancel"
+>
+إلغاء
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+"https://ddqjdcurwlffsmrkcylo.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_OuHtmXoZZGqj46tD1Top6A_hmnz5f1o";
+
+
+const client =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+let users = [];
+
+let selected = null;
+
+
+/* =========================================
+   HELPERS
+========================================= */
+
+const $ =
+id => document.getElementById(id);
+
+
+const esc =
+value =>
+String(value ?? "")
+.replace(
+    /[&<>"']/g,
+    m => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+    }[m])
+);
+
+
+const date =
+value =>
+value
+? new Date(value).toLocaleString("ar-EG")
+: "-";
+
+
+function msg(
+    text,
+    type="ok"
+){
+
+    $("msg").textContent =
+        text;
+
+    $("msg").className =
+        "msg " + type;
+
+}
+
+
+/* =========================================
+   CHECK ADMIN
+========================================= */
+
+async function admin(){
+
+    try{
+
+        const {
+            data:{
+                user
+            },
+            error
+        } =
+        await client.auth.getUser();
+
+
+        if(error){
+
+            throw new Error(
+                error.message
+            );
+
+        }
+
+
+        if(!user){
+
+            location.href =
+                "login.html";
+
+            return false;
+
+        }
+
+
+        const {
+            data:a,
+            error:adminError
+        } =
+        await client
+        .from("admin_users")
+        .select("id")
+        .eq("id",user.id)
+        .maybeSingle();
+
+
+        if(adminError){
+
+            throw new Error(
+                adminError.message
+            );
+
+        }
+
+
+        if(!a){
+
+            document.body.innerHTML =
+            '<h2 style="text-align:center;margin-top:80px">⛔ ليس لديك صلاحية</h2>';
+
+            return false;
+
+        }
+
+
+        return true;
+
+    }
+    catch(e){
+
+        document.body.innerHTML =
+        '<h2 style="text-align:center;margin-top:80px">⛔ ' +
+        esc(e.message) +
+        '</h2>';
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================
+   EDGE FUNCTION API
+========================================= */
+
+async function api(
+    action,
+    data={}
+){
+
+    const {
+        data:{
+            session
+        },
+        error:sessionError
+    } =
+    await client.auth.getSession();
+
+
+    if(sessionError){
+
+        throw new Error(
+            sessionError.message
+        );
+
+    }
+
+
+    if(!session){
+
+        location.href =
+            "login.html";
+
+        throw new Error(
+            "جلسة الدخول غير موجودة"
+        );
+
+    }
+
+
+    const {
+        data:result,
+        error
+    } =
+    await client.functions.invoke(
+        "admin-accounts",
+        {
+            body:{
+                action,
+                ...data
+            }
+        }
+    );
+
+
+    console.log(
+        "FUNCTION RESULT:",
+        result
+    );
+
+    console.log(
+        "FUNCTION ERROR:",
+        error
+    );
+
+
+    if(error){
+
+        throw new Error(
+            error.message ||
+            "حدث خطأ في الاتصال"
+        );
+
+    }
+
+
+    if(result?.error){
+
+        throw new Error(
+            result.error
+        );
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================================
+   LOAD USERS
+========================================= */
+
+async function load(){
+
+    $("body").innerHTML =
+    '<tr><td colspan="7" class="empty">جاري تحميل الحسابات...</td></tr>';
+
+
+    try{
+
+        const result =
+            await api("list");
+
+
+        users =
+            result?.users || [];
+
+
+        render();
+
+
+        if(users.length){
+
+            msg(
+                "تم تحميل " +
+                users.length +
+                " حساب بنجاح ✅",
+                "ok"
+            );
+
+        }
+        else{
+
+            msg(
+                "لم يتم العثور على حسابات",
+                "err"
+            );
+
+        }
+
+    }
+    catch(e){
+
+        console.error(
+            "LOAD ERROR:",
+            e
+        );
+
+
+        $("body").innerHTML =
+        '<tr><td colspan="7" class="empty">' +
+        esc(e.message) +
+        '</td></tr>';
+
+
+        msg(
+            e.message,
+            "err"
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   RENDER
+========================================= */
+
+function render(){
+
+    const q =
+        $("search")
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    const filtered =
+        users.filter(
+            u => {
+
+                const p =
+                    u.profile || {};
+
+
+                const name =
+                    p.full_name ||
+                    u.user_metadata?.full_name ||
+                    "";
+
+
+                const phone =
+                    p.phone ||
+                    u.user_metadata?.phone ||
+                    "";
+
+
+                const student =
+                    p.student_code ||
+                    "";
+
+
+                return (
+
+                    !q ||
+
+                    name
+                    .toLowerCase()
+                    .includes(q) ||
+
+                    phone
+                    .toLowerCase()
+                    .includes(q) ||
+
+                    student
+                    .toLowerCase()
+                    .includes(q)
+
+                );
+
+            }
+        );
+
+
+    $("total").textContent =
+        users.length;
+
+
+    $("active").textContent =
+        users.filter(
+            u =>
+                !u.banned_until ||
+                new Date(u.banned_until)
+                <= new Date()
+        ).length;
+
+
+    $("logged").textContent =
+        users.filter(
+            u =>
+                u.last_sign_in_at
+        ).length;
+
+
+    if(!filtered.length){
+
+        $("body").innerHTML =
+        '<tr><td colspan="7" class="empty">لا توجد حسابات</td></tr>';
+
+        return;
+
+    }
+
+
+    $("body").innerHTML =
+
+        filtered.map(
+            u => {
+
+                const p =
+                    u.profile || {};
+
+
+                const name =
+                    p.full_name ||
+                    u.user_metadata?.full_name ||
+                    "بدون اسم";
+
+
+                const phone =
+                    p.phone ||
+                    u.user_metadata?.phone ||
+                    "-";
+
+
+                const student =
+                    p.student_code ||
+                    "-";
+
+
+                const isBlocked =
+                    !!(
+                        u.banned_until &&
+                        new Date(
+                            u.banned_until
+                        ) > new Date()
+                    );
+
+
+                return `
+
+<tr>
+
+<td>
+
+<b>
+${esc(name)}
+</b>
+
+</td>
+
+
+<td>
+${esc(student)}
+</td>
+
+
+<td>
+${esc(phone)}
+</td>
+
+
+<td>
+${esc(date(u.created_at))}
+</td>
+
+
+<td>
+${esc(date(u.last_sign_in_at))}
+</td>
+
+
+<td>
+
+<span
+class="badge ${isBlocked ? "inactive" : "active"}"
+>
+
+${isBlocked
+    ? "🔴 محظور"
+    : "🟢 نشط"
+}
+
+</span>
+
+</td>
+
+
+<td>
+
+
+<!-- PASSWORD -->
+
+<button
+class="btn password"
+onclick="changePass(
+'${u.id}',
+'${esc(name)}'
+)"
+>
+
+🔑 تغيير الباسورد
+
+</button>
+
+
+<!-- BLOCK / UNBLOCK -->
+
+<button
+class="btn ${isBlocked ? "unblock" : "block"}"
+onclick="toggleBlock(
+'${u.id}',
+'${esc(name)}',
+${isBlocked}
+)"
+>
+
+${isBlocked
+    ? "✅ فك البلوك"
+    : "🚫 بلوك"
+}
+
+</button>
+
+
+<!-- DELETE -->
+
+<button
+class="btn delete"
+onclick="del(
+'${u.id}',
+'${esc(name)}'
+)"
+>
+
+🗑️ حذف
+
+</button>
+
+
+</td>
+
+</tr>
+
+`;
+
+            }
+        )
+        .join("");
+
+}
+
+
+/* =========================================
+   CHANGE PASSWORD
+========================================= */
+
+window.changePass =
+(
+    id,
+    name
+) => {
+
+    selected =
+        id;
+
+
+    $("student").textContent =
+        "الطالب: " + name;
+
+
+    $("password").value =
+        "";
+
+
+    $("modal")
+        .classList
+        .add("show");
+
+
+    $("password")
+        .focus();
+
+};
+
+
+/* =========================================
+   CANCEL PASSWORD
+========================================= */
+
+$("cancel").onclick =
+() => {
+
+    $("modal")
+        .classList
+        .remove("show");
+
+
+    selected =
+        null;
+
+};
+
+
+/* =========================================
+   SAVE PASSWORD
+========================================= */
+
+$("save").onclick =
+async() => {
+
+    const password =
+        $("password")
+        .value
+        .trim();
+
+
+    if(password.length < 6){
+
+        alert(
+            "كلمة المرور لازم تكون 6 أحرف أو أكثر"
+        );
+
+        return;
+
+    }
+
+
+    if(!selected){
+
+        alert(
+            "لم يتم تحديد الحساب"
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        await api(
+            "update_password",
+            {
+                user_id:
+                    selected,
+
+                password:
+                    password
+            }
+        );
+
+
+        alert(
+            "تم تغيير كلمة المرور بنجاح ✅"
+        );
+
+
+        $("modal")
+            .classList
+            .remove("show");
+
+
+        selected =
+            null;
+
+    }
+    catch(e){
+
+        alert(
+            e.message
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   BLOCK / UNBLOCK
+========================================= */
+
+window.toggleBlock =
+async(
+    id,
+    name,
+    isBlocked
+) => {
+
+
+    const actionText =
+        isBlocked
+        ? "فك البلوك"
+        : "عمل بلوك";
+
+
+    const confirmed =
+        confirm(
+            `هل تريد ${actionText} للطالب ${name}؟`
+        );
+
+
+    if(!confirmed){
+
+        return;
+
+    }
+
+
+    try{
+
+        const result =
+            await api(
+                "toggle_block",
+                {
+                    user_id:
+                        id,
+
+                    block:
+                        !isBlocked
+                }
+            );
+
+
+        alert(
+            result.message ||
+            "تم تنفيذ العملية بنجاح ✅"
+        );
+
+
+        await load();
+
+    }
+    catch(e){
+
+        alert(
+            e.message
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   DELETE USER
+========================================= */
+
+window.del =
+async(
+    id,
+    name
+) => {
+
+
+    if(
+        !confirm(
+            "هل أنت متأكد من حذف حساب " +
+            name +
+            "؟"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        !confirm(
+            "⚠️ حذف الحساب قد يحذف البيانات المرتبطة به مثل الحجوزات. استمرار؟"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        await api(
+            "delete_user",
+            {
+                user_id:
+                    id
+            }
+        );
+
+
+        msg(
+            "تم حذف الحساب بنجاح 🗑️",
+            "ok"
+        );
+
+
+        await load();
+
+    }
+    catch(e){
+
+        msg(
+            e.message,
+            "err"
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   EVENTS
+========================================= */
+
+$("search").oninput =
+    render;
+
+
+$("refreshBtn").onclick =
+    load;
+
+
+$("logoutBtn").onclick =
+async() => {
+
+    await client.auth.signOut();
+
+    location.href =
+        "login.html";
+
+};
+
+
+/* =========================================
+   START
+========================================= */
+
+(async() => {
+
+    const ok =
+        await admin();
+
+
+    if(ok){
+
+        await load();
+
+    }
+
+})();
+
+</script>
+
+</body>
+
+</html>

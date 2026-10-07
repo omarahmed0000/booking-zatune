@@ -22,12 +22,16 @@
         </a>
         <div class="headerLinks">
       
-          <a href="https://wa.me/201007428701" target="_blank" > الدعم </a>
+          <a href="https://wa.me/201007428701" target="_blank" >  الدعم و التواصل </a>
           <a href="https://www.facebook.com/zaytun.center?locale=ar_AR" target="_blank" > فيسبوك</a>
-          <a href="my-reservations.html">حجوزاتي</a>
+          <!-- <a href="#my-reservations.html">حجوزاتي</a> -->
           <a href="index.html"> الرئيسية</a>
           <button class="btn" onclick="window.location.href='login.html'">
                سجل دخولك
+          </button>
+          <button class="btn" onclick="window.location.href='my-reservations.html'">
+              
+              حجوزاتي
           </button>
         </div>
       </div>
@@ -146,8 +150,30 @@
         
       </div>
     </div>
+
+    <div id="notificationPopup">
+
+      <div>
+
+        <button id="closeNotification">×</button>
+
+        <div class="notification-icon">🔔</div>
+
+        <h2 id="notificationTitle">إشعار جديد</h2>
+
+        <p id="notificationMessage"></p>
+
+        <button id="notificationOk">
+            حسنًا
+        </button>
+
+      </div>
+
+    </div>  
+    
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="push.js"></script>
   <script src="script.js"></script>
-  
+    
   </body>
 </html>

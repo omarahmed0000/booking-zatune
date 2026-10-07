@@ -146,7 +146,7 @@ body {
     font-size:medium;
 }
 
-.btn {
+.btn,#bo {
     border-radius: 50px;
     height: 52px;
     border: none;
@@ -191,9 +191,12 @@ body {
 }
 
 
+
+
+
 /* END LANDING PAGE  */
 
-/* TRENDING GAMES */
+/* TRENDING books*/
 .trendingContainer {
     margin: auto;
     max-width: 1300px;
@@ -264,11 +267,11 @@ body {
 }
 
 .trendingCard .card .cardName {
-    padding: 0 20px;
+    padding: 0px 20px;
 }
 
 .trendingCard .cardName h3 {
-    margin-top: 0;
+    margin-top: 8px;
 }
 
 .trendingCard .cardName p {
@@ -304,7 +307,7 @@ body {
 }
 
 .mostCards .cardInfo .genre {
-    margin-bottom: 0;
+    margin-bottom: 10px;
     color: gray;
 }
 
@@ -320,6 +323,17 @@ body {
     margin: auto;
 }
 
+.cardInfo .cardName small{
+    margin-bottom: 8px;
+    
+}
+
+.trendingContainer span{
+    margin-bottom: 10px;
+}
+.trendingHeader h1{
+    margin-top: 20px;
+}
 /* END MOST PLAYED  */
 
 /* CATEGORY GAMES  */
@@ -1399,3 +1413,235 @@ body {
 }
 
 
+#notificationPopup {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+#notificationPopup > div {
+    background: white;
+    width: min(450px, 100%);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    font-family: inherit;
+}
+
+#closeNotification {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    border: 0;
+    background: none;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+#notificationPopup .notification-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+#notificationMessage {
+    color: #666;
+    line-height: 1.8;
+}
+
+#notificationOk {
+    border: 0;
+    background: #0171F9;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* =========================
+   NOTIFICATION
+========================= */
+
+#notificationPopup {
+    display: none;
+
+    position: fixed;
+
+    top: 25px;
+    right: 25px;
+
+    z-index: 99999;
+
+    width: min(380px, calc(100% - 40px));
+
+    animation: notificationIn 0.4s ease;
+}
+
+
+/* صندوق الإشعار */
+
+#notificationPopup .notificationBox {
+
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    position: relative;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.18);
+
+    border-right: 5px solid #0171F9;
+
+    font-family: inherit;
+}
+
+
+/* زر X */
+
+#closeNotification {
+
+    position: absolute;
+
+    top: 8px;
+    right: 10px;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 24px;
+
+    color: #777;
+
+    cursor: pointer;
+
+    line-height: 1;
+}
+
+
+/* أيقونة الإشعار */
+
+.notification-icon {
+
+    font-size: 30px;
+
+    margin-bottom: 8px;
+}
+
+
+/* عنوان الإشعار */
+
+#notificationTitle {
+
+    margin: 0 30px 8px 0;
+
+    font-size: 19px;
+
+    font-weight: 700;
+}
+
+
+/* نص الإشعار */
+
+#notificationMessage {
+
+    margin: 0;
+
+    color: #666;
+
+    line-height: 1.7;
+
+    font-size: 14px;
+}
+
+
+/* زر حسنًا */
+
+#notificationOk {
+
+    margin-top: 14px;
+
+    border: none;
+
+    background: #0171F9;
+
+    color: white;
+
+    padding: 9px 20px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-weight: 600;
+}
+
+
+/* حركة الظهور */
+
+@keyframes notificationIn {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateX(50px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateX(0);
+
+    }
+
+}
+
+
+/* الموبايل */
+
+@media (max-width: 600px) {
+
+    #notificationPopup {
+
+        top: 15px;
+
+        right: 15px;
+
+        width: calc(100% - 30px);
+
+    }
+
+}
+
+#notificationPopup {
+    position: fixed !important;
+    top: 25px !important;
+    right: 25px !important;
+    left: auto !important;
+    bottom: auto !important;
+    inset: auto !important;
+
+    width: min(380px, calc(100% - 40px)) !important;
+
+    background: transparent !important;
+
+    display: none;
+
+    z-index: 99999;
+}

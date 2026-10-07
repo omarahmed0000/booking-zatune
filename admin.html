@@ -45,6 +45,8 @@ th{color:#777;font-size:11px}
 .active{background:#eafff2;color:#13824a}.hidden{background:#eee;color:#777}
 .smallbtn{border:0;border-radius:8px;padding:7px 9px;font-family:inherit;font-size:10px;font-weight:700;cursor:pointer;background:#eef5ff;color:#0171F9}
 .smallbtn.hide{background:#fff0f1;color:#c62828}
+.smallbtn.deleteBook{background:#c62828;color:#fff}
+.smallbtn.deleteBook:hover{opacity:.85}
 .empty{text-align:center;color:#888;padding:35px}
 .stat{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap}
 .stat div{background:#f7f9fc;border-radius:12px;padding:11px 14px;font-size:11px}
@@ -76,7 +78,10 @@ th{color:#777;font-size:11px}
 
 <header>
   <h1>📚 لوحة تحكم Zatune Book Shop</h1>
-  <button id="logoutBtn">تسجيل الخروج</button>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button id="accountsBtn" onclick="location.href='accounts.html'">👥 الحسابات</button>
+    <button id="logoutBtn">تسجيل الخروج</button>
+  </div>
 </header>
 
 <div class="container">
@@ -89,11 +94,11 @@ th{color:#777;font-size:11px}
         <label>كود الكتاب</label>
         <input id="bookCode" placeholder="مثال: PHY-001" required>
 
-        <label>اسم الكتاب</label>
-        <input id="bookName" placeholder="مثال: فيزياء تالتة ثانوي" required>
-
         <label>اسم المدرس</label>
-        <input id="teacher" placeholder="مثال: محمد عبدالمعبود">
+        <input id="bookName" placeholder="مثال:اسم المدرس" required>
+
+        <label>اسم الكتاب</label>
+        <input id="teacher" placeholder="مثال:اسم الكتاب">
 
         <div class="row">
           <div>
@@ -141,8 +146,8 @@ th{color:#777;font-size:11px}
           <thead>
             <tr>
               <th>الكود</th>
-              <th>الكتاب</th>
               <th>المدرس</th>
+              <th>الكتاب</th>
               <th>الإجمالي</th>
               <th>المتاح</th>
               <th>الحالة</th>
@@ -338,6 +343,7 @@ function renderBooks(){
           <button class="smallbtn hide" onclick="toggleBook(${b.id},${!b.active})">
             ${b.active ? "إخفاء":"إظهار"}
           </button>
+          <button class="smallbtn deleteBook" onclick="deleteBook(${b.id})">🗑️ حذف</button>
         </td>
       </tr>`;
   }).join("");
@@ -380,6 +386,39 @@ window.toggleBook = async function(id, active){
 
   showMsg(active ? "تم إظهار الكتاب ✅" : "تم إخفاء الكتاب ✅");
   await loadBooks();
+};
+
+window.deleteBook = async function(id){
+  const book = books.find(x => x.id === id);
+  if(!book) return;
+
+  const confirmed = confirm(
+    "⚠️ هل أنت متأكد من حذف الكتاب؟\n\n" +
+    "كود الكتاب: " + (book.book_code || "") + "\n" +
+    "اسم الكتاب: " + (book.name || "") + "\n\n" +
+    "سيتم حذف الكتاب نهائيًا."
+  );
+
+  if(!confirmed) return;
+
+  const {error} = await client
+    .from("books")
+    .delete()
+    .eq("id", id);
+
+  if(error){
+    console.error(error);
+    showMsg("حدث خطأ أثناء حذف الكتاب: " + error.message, "err");
+    return;
+  }
+
+  if(editingId === id){
+    resetForm();
+  }
+
+  showMsg("تم حذف الكتاب بنجاح 🗑️");
+  await loadBooks();
+  await loadReservations();
 };
 
 $("bookImageFile").addEventListener("change", function(){

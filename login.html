@@ -1,19 +1,27 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>تسجيل الدخول | Zatune</title>
+
 <link rel="stylesheet" href="style.css">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 body{
     margin:0;
     min-height:100vh;
     background:#0171F9;
     font-family:Alexandria,Arial,sans-serif
 }
+
 .wrap{
     min-height:100vh;
     display:flex;
@@ -21,6 +29,7 @@ body{
     justify-content:center;
     padding:25px
 }
+
 .box{
     width:460px;
     max-width:100%;
@@ -29,9 +38,22 @@ body{
     padding:38px;
     box-shadow:0 20px 60px #0002
 }
-.logo{text-align:center}
-.logo img{width:110px}
-h1{text-align:center;color:#222;margin:12px 0;font-size:27px}
+
+.logo{
+    text-align:center
+}
+
+.logo img{
+    width:110px
+}
+
+h1{
+    text-align:center;
+    color:#222;
+    margin:12px 0;
+    font-size:27px
+}
+
 .sub{
     text-align:center;
     color:#777;
@@ -39,13 +61,18 @@ h1{text-align:center;color:#222;margin:12px 0;font-size:27px}
     line-height:1.8;
     margin-bottom:28px
 }
-.group{margin-bottom:18px}
+
+.group{
+    margin-bottom:18px
+}
+
 label{
     display:block;
     font-size:13px;
     font-weight:600;
     margin-bottom:7px
 }
+
 input{
     width:100%;
     height:50px;
@@ -56,7 +83,11 @@ input{
     font-family:inherit;
     outline:none
 }
-input:focus{border-color:#0171F9}
+
+input:focus{
+    border-color:#0171F9
+}
+
 button{
     width:100%;
     height:54px;
@@ -69,7 +100,11 @@ button{
     font-weight:700;
     cursor:pointer
 }
-button:disabled{opacity:.6}
+
+button:disabled{
+    opacity:.6
+}
+
 .msg{
     display:none;
     margin-top:15px;
@@ -79,52 +114,95 @@ button:disabled{opacity:.6}
     font-size:12px;
     line-height:1.8
 }
-.err{display:block;background:#fff0f1;color:#c62828}
-.ok{display:block;background:#ecfff3;color:#168044}
+
+.err{
+    display:block;
+    background:#fff0f1;
+    color:#c62828
+}
+
+.ok{
+    display:block;
+    background:#ecfff3;
+    color:#168044
+}
+
 .links{
     text-align:center;
     margin-top:20px;
     font-size:13px
 }
+
 a{
     color:#0171F9;
     text-decoration:none;
     font-weight:700
 }
+
+.whatsapp-link{
+    display:inline-block;
+    margin-top:8px;
+    color:#168044;
+    font-weight:700;
+    text-decoration:underline;
+    cursor:pointer
+}
+
 </style>
+
 </head>
+
 
 <body>
 
 <div class="wrap">
+
 <div class="box">
 
 <div class="logo">
-    <img src="logo2-Photoroom.png" alt="Logo">
+
+    <img
+        src="logo4-Photoroom.png"
+        alt="Logo"
+    >
+
 </div>
 
-<h1>تسجيل الدخول</h1>
+
+<h1>
+    تسجيل الدخول
+</h1>
+
 
 <div class="sub">
-    ادخل برقم الموبايل أو البريد الإلكتروني وكلمة المرور
+    ادخل برقم الهاتف و وكلمة المرور
 </div>
+
 
 <form id="form">
 
+
 <div class="group">
-    <label for="loginValue">رقم الموبايل أو البريد الإلكتروني</label>
+
+    <label for="loginValue">
+        رقم الهاتف
+    </label>
 
     <input
         id="loginValue"
         type="text"
-        placeholder="01012345678 أو omar@center.co"
         autocomplete="username"
         required
     >
+
 </div>
 
+
 <div class="group">
-    <label for="pass">كلمة المرور</label>
+
+    <label for="pass">
+        كلمة المرور
+    </label>
 
     <input
         id="pass"
@@ -132,37 +210,89 @@ a{
         autocomplete="current-password"
         required
     >
+
 </div>
 
-<button id="btn" type="submit">
+
+<button
+    id="btn"
+    type="submit"
+>
     تسجيل الدخول
 </button>
 
-<div id="msg" class="msg"></div>
+
+<div
+    id="msg"
+    class="msg"
+></div>
+
 
 </form>
 
-<div class="links">
-    ليس لديك حساب؟
-    <a href="signup.html">إنشاء حساب جديد</a>
-</div>
+
+<!-- إنشاء حساب -->
 
 <div class="links">
-    <a href="index.html" style="color:#777;font-weight:400">
+
+    ليس لديك حساب؟
+
+    <a href="signup.html">
+        إنشاء حساب جديد
+    </a>
+
+</div>
+
+
+<!-- نسيت كلمة المرور -->
+
+<div class="links">
+
+    <a
+        href="https://wa.me/201007428701?text=السلام%20عليكم،%20نسيت%20كلمة%20المرور%20الخاصة%20بحسابي%20على%20Zatune%20Book%20Shop%20وأريد%20إعادة%20تعيينها.%0Aرقم%20الهاتف:%20"
+        target="_blank"
+        style="color:#0171F9;font-weight:700"
+    >
+        🔑 نسيت كلمة المرور؟
+    </a>
+
+</div>
+
+
+<!-- العودة للرئيسية -->
+
+<div class="links">
+
+    <a
+        href="index.html"
+        style="color:#777;font-weight:400"
+    >
         العودة للرئيسية
     </a>
+
+</div>
+
+
 </div>
 
 </div>
-</div>
+
+
 
 <script>
+
+
+/* ============================================
+   SUPABASE
+============================================ */
 
 const SUPABASE_URL =
     "https://ddqjdcurwlffsmrkcylo.supabase.co";
 
+
 const SUPABASE_KEY =
     "sb_publishable_OuHtmXoZZGqj46tD1Top6A_hmnz5f1o";
+
 
 const client =
     window.supabase.createClient(
@@ -171,66 +301,86 @@ const client =
     );
 
 
-// ============================================
-// تحويل رقم الهاتف لصيغة مصرية موحدة
-// ============================================
+
+/* ============================================
+   تحويل رقم الهاتف لصيغة مصرية موحدة
+============================================ */
 
 function phoneNorm(value){
 
-    let p = value
+    let p =
+        value
         .replace(/\s|-/g,"")
         .trim();
+
 
     if(p.startsWith("+20"))
         return p;
 
+
     if(p.startsWith("20"))
         return "+" + p;
+
 
     if(p.startsWith("01"))
         return "+20" + p.slice(1);
 
+
     return p;
+
 }
 
 
-// ============================================
-// الإيميل الداخلي للطلاب
-// ============================================
+
+/* ============================================
+   الإيميل الداخلي للطلاب
+============================================ */
 
 function internalEmail(phone){
 
-    return phone.replace("+","") +
-        "@users.zatune.local";
+    return (
+        phone.replace("+","")
+        +
+        "@users.zatune.local"
+    );
 
 }
 
 
-// ============================================
-// الرسائل
-// ============================================
+
+/* ============================================
+   الرسائل
+============================================ */
 
 function show(text,type){
 
     const message =
         document.getElementById("msg");
 
-    message.textContent = text;
+
+    message.innerHTML =
+        text;
+
 
     message.className =
         "msg " + type;
+
 }
 
 
-// ============================================
-// LOGIN
-// ============================================
+
+/* ============================================
+   LOGIN
+============================================ */
 
 document
 .getElementById("form")
-.addEventListener("submit", async function(e){
+.addEventListener(
+"submit",
+async function(e){
 
     e.preventDefault();
+
 
     const value =
         document
@@ -238,11 +388,16 @@ document
         .value
         .trim();
 
+
     const password =
         document
         .getElementById("pass")
         .value;
 
+
+    /* ========================================
+       التأكد من إدخال البيانات
+    ======================================== */
 
     if(!value){
 
@@ -252,13 +407,17 @@ document
         );
 
         return;
+
     }
 
 
     const button =
         document.getElementById("btn");
 
-    button.disabled = true;
+
+    button.disabled =
+        true;
+
 
     button.textContent =
         "جاري تسجيل الدخول...";
@@ -267,88 +426,219 @@ document
     let email;
 
 
-    // ========================================
-    // لو دخل إيميل → استخدمه مباشرة
-    // ========================================
 
-    if(value.includes("@")){
+    /* ========================================
+       لو دخل إيميل
+    ======================================== */
 
-        email = value.toLowerCase();
+    if(
+        value.includes("@")
+    ){
+
+        email =
+            value.toLowerCase();
 
     }
 
-    // ========================================
-    // لو دخل رقم → حوله لإيميل الطالب الداخلي
-    // ========================================
+
+
+    /* ========================================
+       لو دخل رقم هاتف
+    ======================================== */
 
     else{
 
         const phone =
             phoneNorm(value);
 
-        if(!/^\+201\d{9}$/.test(phone)){
+
+        if(
+            !/^\+201\d{9}$/.test(phone)
+        ){
 
             show(
                 "اكتب رقم مصري صحيح مثل 01012345678.",
                 "err"
             );
 
-            button.disabled = false;
+
+            button.disabled =
+                false;
+
 
             button.textContent =
                 "تسجيل الدخول";
 
+
             return;
+
         }
+
 
         email =
             internalEmail(phone);
+
     }
 
 
-    // ========================================
-    // تسجيل الدخول في Supabase
-    // ========================================
 
-    const {data,error} =
-        await client.auth.signInWithPassword({
+    /* ========================================
+       تسجيل الدخول في Supabase
+    ======================================== */
 
-            email: email,
+    const {
+        data,
+        error
+    } =
+    await client.auth.signInWithPassword({
 
-            password: password
+        email:
+            email,
 
-        });
+        password:
+            password
 
+    });
+
+
+
+    /* ========================================
+       LOGIN ERROR
+    ======================================== */
 
     if(error){
 
-        console.error(error);
-
-        show(
-            "بيانات تسجيل الدخول غير صحيحة.",
-            "err"
+        console.error(
+            "LOGIN ERROR:",
+            error
         );
 
-        button.disabled = false;
+
+        const errorText =
+            String(
+                error.message || ""
+            )
+            .toLowerCase();
+
+
+
+        /* ====================================
+           الحساب محظور
+        ==================================== */
+
+        if(
+            errorText.includes("banned") ||
+            errorText.includes("ban") ||
+            errorText.includes("blocked") ||
+            errorText.includes("disabled")
+        ){
+
+            show(
+
+                "🚫 <b>تم حظر حسابك</b><br>" +
+
+                "لا يمكنك تسجيل الدخول حاليًا.<br>" +
+
+                '<a ' +
+                'href="https://wa.me/201007428701" ' +
+                'target="_blank" ' +
+                'class="whatsapp-link">' +
+
+                '💬 التواصل مع الإدارة عبر واتساب' +
+
+                '</a>',
+
+                "err"
+
+            );
+
+        }
+
+        else{
+
+            show(
+                "بيانات تسجيل الدخول غير صحيحة.",
+                "err"
+            );
+
+        }
+
+
+        button.disabled =
+            false;
+
 
         button.textContent =
             "تسجيل الدخول";
 
+
         return;
+
     }
 
 
-    // ========================================
-    // هل المستخدم Admin؟
-    // ========================================
 
-    const {data:admin} =
-        await client
-        .from("admin_users")
-        .select("id")
-        .eq("id",data.user.id)
-        .maybeSingle();
+    /* ========================================
+       التأكد من وجود المستخدم
+    ======================================== */
 
+    if(
+        !data ||
+        !data.user
+    ){
+
+        show(
+            "تعذر تسجيل الدخول، حاول مرة أخرى.",
+            "err"
+        );
+
+
+        button.disabled =
+            false;
+
+
+        button.textContent =
+            "تسجيل الدخول";
+
+
+        return;
+
+    }
+
+
+
+    /* ========================================
+       هل المستخدم Admin؟
+    ======================================== */
+
+    const {
+        data:admin,
+        error:adminError
+    } =
+    await client
+    .from("admin_users")
+    .select("id")
+    .eq(
+        "id",
+        data.user.id
+    )
+    .maybeSingle();
+
+
+    if(adminError){
+
+        console.error(
+            "ADMIN CHECK ERROR:",
+            adminError
+        );
+
+    }
+
+
+
+    /* ========================================
+       ADMIN
+    ======================================== */
 
     if(admin){
 
@@ -357,36 +647,48 @@ document
             "ok"
         );
 
-        setTimeout(function(){
+
+        setTimeout(
+        function(){
 
             window.location.href =
                 "admin.html";
 
-        },700);
+        },
+        700
+        );
+
 
         return;
+
     }
 
 
-    // ========================================
-    // مستخدم عادي
-    // ========================================
+
+    /* ========================================
+       USER
+    ======================================== */
 
     show(
         "تم تسجيل الدخول بنجاح ✅",
         "ok"
     );
 
-    setTimeout(function(){
+
+    setTimeout(
+    function(){
 
         window.location.href =
             "index.html";
 
-    },700);
+    },
+    700
+    );
 
 });
 
 </script>
 
 </body>
+
 </html>

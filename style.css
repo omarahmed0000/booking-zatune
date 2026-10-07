@@ -1987,3 +1987,110 @@ body.dark-mode { color-scheme: dark; }
     }
 
 }
+
+/* =========================================
+   FORCE LIGHT MODE
+   لا يتأثر بوضع الهاتف
+========================================= */
+
+html:not(.dark-mode) body {
+    background-color: #fff !important;
+    color: #222 !important;
+}
+
+html:not(.dark-mode) .mostContainer {
+    background-color: #EEEEEE !important;
+    color: #222 !important;
+}
+
+html:not(.dark-mode) .trendingContainer,
+html:not(.dark-mode) .categoryContainer {
+    background-color: transparent !important;
+    color: #222 !important;
+}
+
+html:not(.dark-mode) .trendingCard .card .cardInfo {
+    background-color: #EEEEEE !important;
+    color: #222 !important;
+}
+
+html:not(.dark-mode) .trendingCard .cardName h3 {
+    color: #222 !important;
+}
+
+html:not(.dark-mode) .trendingCard .cardName p {
+    color: gray !important;
+}
+
+html:not(.dark-mode) .searchBar input {
+    background-color: #fff !important;
+    color: #222 !important;
+}
+
+html:not(.dark-mode) .searchBar input::placeholder {
+    color: #777 !important;
+}
+
+html:not(.dark-mode) .suggestions,
+html:not(.dark-mode) .suggestion {
+    background-color: #fff !important;
+    color: #333 !important;
+}
+
+
+/* =========================================
+   DARK MODE
+========================================= */
+
+html.dark-mode body {
+    background-color: #111827 !important;
+    color: #f3f4f6 !important;
+}
+
+html.dark-mode .mostContainer {
+    background-color: #1f2937 !important;
+    color: #f3f4f6 !important;
+}
+
+html.dark-mode .trendingCard .card .cardInfo {
+    background-color: #1f2937 !important;
+    color: #f3f4f6 !important;
+}
+
+html.dark-mode .trendingCard .cardName h3 {
+    color: #f3f4f6 !important;
+}
+
+html.dark-mode .trendingCard .cardName p {
+    color: #b9c1cc !important;
+}
+
+html.dark-mode .searchBar input {
+    background-color: #1f2937 !important;
+    color: #fff !important;
+}
+
+html.dark-mode .searchBar input::placeholder {
+    color: #b9c1cc !important;
+}
+
+html.dark-mode .suggestions,
+html.dark-mode .suggestion {
+    background-color: #1f2937 !important;
+    color: #fff !important;
+}
+
+
+/* =========================================
+   لا تستخدم Dark Mode الخاص بالجهاز
+========================================= */
+
+html,
+body {
+    color-scheme: light;
+}
+
+html.dark-mode,
+html.dark-mode body {
+    color-scheme: dark;
+}

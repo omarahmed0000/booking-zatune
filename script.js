@@ -633,16 +633,27 @@ function setupThemeToggle() {
     if (!themeToggle) return;
 
 
-    // Light هو الوضع الافتراضي
-    // حتى لو الجهاز نفسه Dark
+    // ==========================================
+    // منع وضع الهاتف من التحكم في الموقع
+    // ==========================================
+
+    document.documentElement.style.colorScheme = "light";
+
+
+    // ==========================================
+    // قراءة اختيار الطالب
+    // ==========================================
 
     const savedTheme =
         localStorage.getItem("zatune-theme");
 
 
+    // لو مفيش اختيار سابق = LIGHT
     if (savedTheme === "dark") {
 
         document.body.classList.add("dark-mode");
+
+        document.documentElement.classList.add("dark-mode");
 
         if (themeIcon) {
             themeIcon.textContent = "🌙";
@@ -652,6 +663,8 @@ function setupThemeToggle() {
 
         document.body.classList.remove("dark-mode");
 
+        document.documentElement.classList.remove("dark-mode");
+
         if (themeIcon) {
             themeIcon.textContent = "☀️";
         }
@@ -660,45 +673,52 @@ function setupThemeToggle() {
 
 
     // ==========================================
-    // TOGGLE
+    // عند الضغط على الزر
     // ==========================================
 
-    themeToggle.addEventListener(
-        "click",
-        function () {
+    themeToggle.addEventListener("click", function () {
 
-            const isDark =
-                document.body.classList.toggle(
-                    "dark-mode"
-                );
+        const isDark =
+            document.body.classList.toggle("dark-mode");
 
 
-            if (isDark) {
+        document.documentElement.classList.toggle(
+            "dark-mode",
+            isDark
+        );
 
-                localStorage.setItem(
-                    "zatune-theme",
-                    "dark"
-                );
 
-                if (themeIcon) {
-                    themeIcon.textContent = "🌙";
-                }
+        if (isDark) {
 
-            } else {
+            localStorage.setItem(
+                "zatune-theme",
+                "dark"
+            );
 
-                localStorage.setItem(
-                    "zatune-theme",
-                    "light"
-                );
+            document.documentElement.style.colorScheme =
+                "dark";
 
-                if (themeIcon) {
-                    themeIcon.textContent = "☀️";
-                }
+            if (themeIcon) {
+                themeIcon.textContent = "🌙";
+            }
 
+        } else {
+
+            localStorage.setItem(
+                "zatune-theme",
+                "light"
+            );
+
+            document.documentElement.style.colorScheme =
+                "light";
+
+            if (themeIcon) {
+                themeIcon.textContent = "☀️";
             }
 
         }
-    );
+
+    });
 
 }
 
@@ -707,40 +727,3 @@ document.addEventListener(
     "DOMContentLoaded",
     setupThemeToggle
 );
-
-
-// ==========================================
-// SERVICE WORKER
-// ==========================================
-
-if ("serviceWorker" in navigator) {
-
-    window.addEventListener(
-        "load",
-        async () => {
-
-            try {
-
-                const registration =
-                    await navigator.serviceWorker.register(
-                        "/service-worker.js"
-                    );
-
-                console.log(
-                    "Service Worker registered:",
-                    registration.scope
-                );
-
-            } catch (error) {
-
-                console.error(
-                    "Service Worker registration failed:",
-                    error
-                );
-
-            }
-
-        }
-    );
-
-}

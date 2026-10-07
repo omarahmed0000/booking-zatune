@@ -2094,3 +2094,83 @@ html.dark-mode,
 html.dark-mode body {
     color-scheme: dark;
 }
+
+
+/* ==========================================
+   INTERNAL NOTIFICATIONS - SITE ONLY
+   ========================================== */
+
+.notificationBell {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    transition: .3s;
+}
+
+.notificationBell:hover {
+    transform: translateY(-3px);
+    background: rgba(255,255,255,.25);
+}
+
+.notificationCount {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    border-radius: 50px;
+    background: #EE626B;
+    color: #fff;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+    border: 2px solid #0171F9;
+}
+
+@media (max-width: 768px) {
+    .notificationBell {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        font-size: 19px;
+    }
+}
+
+/* Dark mode للإشعار الداخلي */
+html.dark-mode #notificationPopup > div,
+body.dark-mode #notificationPopup > div {
+    background: #1f2937 !important;
+    color: #f3f4f6 !important;
+}
+
+html.dark-mode #notificationMessage,
+body.dark-mode #notificationMessage {
+    color: #d1d5db !important;
+}
+
+/* ==========================================
+   NOTIFICATIONS FONT - ALEXANDRIA
+========================================== */
+
+#notificationPopup,
+#notificationPopup *,
+#notificationsListPopup,
+#notificationsListPopup * {
+    font-family: 'Alexandria', sans-serif !important;
+}

@@ -59,173 +59,181 @@ function getBooksData() {
 // SHOW SUGGESTIONS WHILE TYPING
 // ============================================
 
-searchInput.addEventListener("input", function () {
+if (searchInput) {
 
-    const value = searchInput.value
-        .trim()
-        .toLowerCase();
+    searchInput.addEventListener("input", function () {
 
-    suggestions.innerHTML = "";
+        const value = searchInput.value
+            .trim()
+            .toLowerCase();
 
-    selectedIndex = -1;
+        if (suggestions) {
+            suggestions.innerHTML = "";
+        }
 
-    if (value === "") {
+        selectedIndex = -1;
 
-        suggestions.style.display = "none";
+        if (value === "") {
 
-        const cards = document.querySelectorAll(".card");
+            if (suggestions) {
+                suggestions.style.display = "none";
+            }
 
-        cards.forEach(function (card) {
-            card.style.display = "";
+            const cards = document.querySelectorAll(".card");
+
+            cards.forEach(function (card) {
+                card.style.display = "";
+            });
+
+            return;
+        }
+
+        const books = getBooksData();
+
+        const results = books.filter(function (book) {
+
+            return book.fullText.includes(value);
+
         });
 
-        return;
-    }
+        if (results.length === 0) {
 
-    const books = getBooksData();
+            if (suggestions) {
+                suggestions.style.display = "none";
+            }
 
-    const results = books.filter(function (book) {
+            return;
+        }
 
-        return book.fullText.includes(value);
+        results.forEach(function (book) {
 
-    });
+            const item = document.createElement("div");
 
-    if (results.length === 0) {
+            item.classList.add("suggestion");
 
-        suggestions.style.display = "none";
+            item.innerHTML = `
 
-        return;
-    }
+                <span class="suggestionCategory">
+                    ${book.category}
+                </span>
 
-    results.forEach(function (book) {
+                <span class="suggestionTitle">
+                    ${book.title}
+                </span>
 
-        const item = document.createElement("div");
+            `;
 
-        item.classList.add("suggestion");
+            item.addEventListener("click", function () {
 
-        item.innerHTML = `
+                searchInput.value =
+                    book.category + " " + book.title;
 
-            <span class="suggestionCategory">
-                ${book.category}
-            </span>
-
-            <span class="suggestionTitle">
-                ${book.title}
-            </span>
-
-        `;
-
-        item.addEventListener("click", function () {
-
-            searchInput.value =
-                book.category + " " + book.title;
-
-            suggestions.style.display = "none";
-
-            selectedIndex = -1;
-
-            searchBooks();
-
-            setTimeout(function () {
-
-                const cards =
-                    document.querySelectorAll(".card");
-
-                if (cards.length > 0) {
-
-                    cards[0].scrollIntoView({
-                        behavior: "smooth",
-                        block: "center"
-                    });
-
+                if (suggestions) {
+                    suggestions.style.display = "none";
                 }
 
-            }, 100);
+                selectedIndex = -1;
+
+                searchBooks();
+
+            });
+
+            if (suggestions) {
+                suggestions.appendChild(item);
+            }
 
         });
 
-        suggestions.appendChild(item);
+        if (suggestions) {
+            suggestions.style.display = "block";
+        }
 
     });
 
-    suggestions.style.display = "block";
-
-});
+}
 
 
 // ============================================
 // KEYBOARD NAVIGATION
 // ============================================
 
-searchInput.addEventListener("keydown", function (event) {
+if (searchInput) {
 
-    const items =
-        suggestions.querySelectorAll(".suggestion");
+    searchInput.addEventListener("keydown", function (event) {
 
-    if (event.key === "ArrowDown") {
+        const items =
+            suggestions
+                ? suggestions.querySelectorAll(".suggestion")
+                : [];
 
-        event.preventDefault();
+        if (event.key === "ArrowDown") {
 
-        if (items.length === 0) {
-            return;
-        }
+            event.preventDefault();
 
-        selectedIndex++;
+            if (items.length === 0) {
+                return;
+            }
 
-        if (selectedIndex >= items.length) {
-            selectedIndex = 0;
-        }
+            selectedIndex++;
 
-        updateSelection(items);
+            if (selectedIndex >= items.length) {
+                selectedIndex = 0;
+            }
 
-    }
-
-    else if (event.key === "ArrowUp") {
-
-        event.preventDefault();
-
-        if (items.length === 0) {
-            return;
-        }
-
-        selectedIndex--;
-
-        if (selectedIndex < 0) {
-            selectedIndex = items.length - 1;
-        }
-
-        updateSelection(items);
-
-    }
-
-    else if (event.key === "Enter") {
-
-        event.preventDefault();
-
-        if (
-            selectedIndex >= 0 &&
-            selectedIndex < items.length
-        ) {
-
-            items[selectedIndex].click();
-
-        } else {
-
-            searchBooks();
+            updateSelection(items);
 
         }
 
-    }
+        else if (event.key === "ArrowUp") {
 
-    else if (event.key === "Escape") {
+            event.preventDefault();
 
-        suggestions.style.display = "none";
+            if (items.length === 0) {
+                return;
+            }
 
-        selectedIndex = -1;
+            selectedIndex--;
 
-    }
+            if (selectedIndex < 0) {
+                selectedIndex = items.length - 1;
+            }
 
-});
+            updateSelection(items);
+
+        }
+
+        else if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            if (
+                selectedIndex >= 0 &&
+                selectedIndex < items.length
+            ) {
+
+                items[selectedIndex].click();
+
+            } else {
+
+                searchBooks();
+
+            }
+
+        }
+
+        else if (event.key === "Escape") {
+
+            if (suggestions) {
+                suggestions.style.display = "none";
+            }
+
+            selectedIndex = -1;
+
+        }
+
+    });
+
+}
 
 
 // ============================================
@@ -247,83 +255,6 @@ function updateSelection(items) {
             });
 
         }
-
-    });
-
-}
-
-
-// ============================================
-// NORMAL SEARCH
-// ============================================
-
-function searchBooks() {
-
-    const searchText = searchInput.value
-        .trim()
-        .toLowerCase();
-
-    const cards = document.querySelectorAll(".card");
-
-    if (searchText === "") {
-
-        cards.forEach(function (card) {
-            card.style.display = "";
-        });
-
-        suggestions.style.display = "none";
-
-        selectedIndex = -1;
-
-        return;
-    }
-
-    const words = searchText
-        .split(/\s+/)
-        .filter(function (word) {
-            return word !== "";
-        });
-
-    cards.forEach(function (card) {
-
-        const cardText = card.innerText
-            .toLowerCase()
-            .replace(/\s+/g, " ")
-            .trim();
-
-        const found = words.every(function (word) {
-
-            return cardText.includes(word);
-
-        });
-
-        if (found) {
-            card.style.display = "";
-        } else {
-            card.style.display = "none";
-        }
-
-    });
-
-    suggestions.style.display = "none";
-
-    selectedIndex = -1;
-
-}
-
-
-// ============================================
-// SEARCH BUTTON
-// ============================================
-
-const searchButton =
-    document.querySelector(".searchBtn");
-
-if (searchButton) {
-
-    searchButton.addEventListener("click", function () {
-
-        searchBooks();
 
     });
 
@@ -357,6 +288,8 @@ async function loadBooks() {
 
     const container =
         document.getElementById("booksContainer");
+
+    if (!container) return;
 
     const { data, error } =
         await supabaseClient
@@ -393,6 +326,8 @@ function renderBooks(books) {
 
     const container =
         document.getElementById("booksContainer");
+
+    if (!container) return;
 
     if (!books.length) {
 
@@ -504,21 +439,28 @@ function openBook(id) {
 
 
 // ============================================
-// SUPABASE SEARCH
+// SEARCH BOOKS
 // ============================================
 
 function searchBooks() {
 
+    const searchInputElement =
+        document.getElementById("searchInput");
+
+    if (!searchInputElement) return;
+
     const value =
-        document
-            .getElementById("searchInput")
-            .value
+        searchInputElement.value
             .trim()
             .toLowerCase();
 
     if (!value) {
 
         renderBooks(allBooks);
+
+        if (suggestions) {
+            suggestions.style.display = "none";
+        }
 
         return;
     }
@@ -543,18 +485,46 @@ function searchBooks() {
 
     renderBooks(results);
 
+    if (suggestions) {
+        suggestions.style.display = "none";
+    }
+
 }
 
 
-document
-    .getElementById("searchInput")
-    .addEventListener(
-        "input",
-        searchBooks
+// ============================================
+// SEARCH BUTTON
+// ============================================
+
+const searchButton =
+    document.querySelector(".searchBtn");
+
+if (searchButton) {
+
+    searchButton.addEventListener(
+        "click",
+        function () {
+            searchBooks();
+        }
     );
 
+}
 
-loadBooks();
+
+// ============================================
+// SEARCH INPUT
+// ============================================
+
+if (searchInput) {
+
+    searchInput.addEventListener(
+        "input",
+        function () {
+            searchBooks();
+        }
+    );
+
+}
 
 
 // ==========================================
@@ -568,16 +538,13 @@ async function setupLoginButton() {
 
     if (!loginButton) return;
 
-
     const {
         data: { user },
         error
     } = await supabaseClient.auth.getUser();
 
 
-    // ==========================================
     // NOT LOGGED IN
-    // ==========================================
 
     if (error || !user) {
 
@@ -595,9 +562,7 @@ async function setupLoginButton() {
     }
 
 
-    // ==========================================
     // LOGGED IN
-    // ==========================================
 
     loginButton.textContent =
         "👤 حسابي";
@@ -610,12 +575,6 @@ async function setupLoginButton() {
     };
 
 }
-
-
-document.addEventListener(
-    "DOMContentLoaded",
-    setupLoginButton
-);
 
 
 // ==========================================
@@ -633,27 +592,28 @@ function setupThemeToggle() {
     if (!themeToggle) return;
 
 
-    // ==========================================
-    // منع وضع الهاتف من التحكم في الموقع
-    // ==========================================
+    // منع الهاتف من التحكم في وضع الموقع
 
-    document.documentElement.style.colorScheme = "light";
+    document.documentElement.style.colorScheme =
+        "light";
 
 
-    // ==========================================
-    // قراءة اختيار الطالب
-    // ==========================================
+    // قراءة الوضع المحفوظ
 
     const savedTheme =
         localStorage.getItem("zatune-theme");
 
 
-    // لو مفيش اختيار سابق = LIGHT
     if (savedTheme === "dark") {
 
         document.body.classList.add("dark-mode");
 
-        document.documentElement.classList.add("dark-mode");
+        document.documentElement.classList.add(
+            "dark-mode"
+        );
+
+        document.documentElement.style.colorScheme =
+            "dark";
 
         if (themeIcon) {
             themeIcon.textContent = "🌙";
@@ -663,7 +623,12 @@ function setupThemeToggle() {
 
         document.body.classList.remove("dark-mode");
 
-        document.documentElement.classList.remove("dark-mode");
+        document.documentElement.classList.remove(
+            "dark-mode"
+        );
+
+        document.documentElement.style.colorScheme =
+            "light";
 
         if (themeIcon) {
             themeIcon.textContent = "☀️";
@@ -672,58 +637,884 @@ function setupThemeToggle() {
     }
 
 
-    // ==========================================
-    // عند الضغط على الزر
-    // ==========================================
+    // تغيير الوضع عند الضغط
 
-    themeToggle.addEventListener("click", function () {
+    themeToggle.addEventListener(
+        "click",
+        function () {
 
-        const isDark =
-            document.body.classList.toggle("dark-mode");
+            const isDark =
+                document.body.classList.toggle(
+                    "dark-mode"
+                );
 
-
-        document.documentElement.classList.toggle(
-            "dark-mode",
-            isDark
-        );
-
-
-        if (isDark) {
-
-            localStorage.setItem(
-                "zatune-theme",
-                "dark"
+            document.documentElement.classList.toggle(
+                "dark-mode",
+                isDark
             );
 
-            document.documentElement.style.colorScheme =
-                "dark";
 
-            if (themeIcon) {
-                themeIcon.textContent = "🌙";
-            }
+            if (isDark) {
 
-        } else {
+                localStorage.setItem(
+                    "zatune-theme",
+                    "dark"
+                );
 
-            localStorage.setItem(
-                "zatune-theme",
-                "light"
-            );
+                document.documentElement.style.colorScheme =
+                    "dark";
 
-            document.documentElement.style.colorScheme =
-                "light";
+                if (themeIcon) {
+                    themeIcon.textContent = "🌙";
+                }
 
-            if (themeIcon) {
-                themeIcon.textContent = "☀️";
+            } else {
+
+                localStorage.setItem(
+                    "zatune-theme",
+                    "light"
+                );
+
+                document.documentElement.style.colorScheme =
+                    "light";
+
+                if (themeIcon) {
+                    themeIcon.textContent = "☀️";
+                }
+
             }
 
         }
-
-    });
+    );
 
 }
 
 
+// ==========================================
+// INTERNAL NOTIFICATIONS ONLY
+// ==========================================
+// الإشعارات داخل الموقع فقط
+// لا Chrome Push
+// لا Web Push
+// لا Notifications خارج الموقع
+
+let notificationItems = [];
+let currentNotificationIndex = 0;
+let notificationChannel = null;
+let notificationUserId = null;
+
+
+// ==========================================
+// UPDATE NOTIFICATION COUNT
+// ==========================================
+
+function updateNotificationCount() {
+
+    const countEl =
+        document.getElementById("notificationCount");
+
+    if (!countEl) return;
+
+    const count =
+        notificationItems.filter(
+            notification => !notification.is_read
+        ).length;
+
+    countEl.textContent =
+        count > 99 ? "99+" : String(count);
+
+    countEl.style.display =
+        count > 0 ? "flex" : "none";
+}
+
+
+// ==========================================
+// SHOW POPUP
+// ==========================================
+
+function showNotificationPopup(notification) {
+
+    if (!notification) return;
+
+    const popup =
+        document.getElementById("notificationPopup");
+
+    const title =
+        document.getElementById("notificationTitle");
+
+    const message =
+        document.getElementById("notificationMessage");
+
+    if (!popup || !title || !message) {
+        return;
+    }
+
+    title.textContent =
+        notification.title || "إشعار جديد";
+
+    message.textContent =
+        notification.message || "";
+
+    popup.style.display = "flex";
+}
+
+
+// ==========================================
+// GET CURRENT USER
+// ==========================================
+
+async function getNotificationUser() {
+
+    const {
+        data: { session },
+        error
+    } = await supabaseClient.auth.getSession();
+
+    if (error || !session) {
+        return null;
+    }
+
+    notificationUserId =
+        session.user.id;
+
+    return session.user;
+}
+
+
+// ==========================================
+// LOAD ALL NOTIFICATIONS
+// ==========================================
+
+async function loadAllNotifications() {
+
+    const user =
+        await getNotificationUser();
+
+    if (!user) {
+
+        notificationItems = [];
+
+        updateNotificationCount();
+
+        return [];
+
+    }
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("notifications")
+            .select(
+                "id,user_id,title,message,is_read,created_at"
+            )
+            .eq(
+                "user_id",
+                user.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            )
+            .limit(100);
+
+    if (error) {
+
+        console.error(
+            "Notifications error:",
+            error
+        );
+
+        return [];
+
+    }
+
+    notificationItems =
+        data || [];
+
+    updateNotificationCount();
+
+    return notificationItems;
+}
+
+
+// ==========================================
+// SHOW FIRST UNREAD NOTIFICATION
+// WHEN SITE OPENS
+// ==========================================
+
+async function showFirstUnreadNotification() {
+
+    const notifications =
+        await loadAllNotifications();
+
+    const unread =
+        notifications.filter(
+            notification =>
+                !notification.is_read
+        );
+
+    if (!unread.length) {
+        return;
+    }
+
+    currentNotificationIndex = 0;
+
+    showNotificationPopup(
+        unread[0]
+    );
+}
+
+
+// ==========================================
+// MARK NOTIFICATION AS READ
+// ==========================================
+
+async function markNotificationAsRead(
+    notificationId
+) {
+
+    if (!notificationId) return;
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("notifications")
+            .update({
+                is_read: true
+            })
+            .eq(
+                "id",
+                notificationId
+            )
+            .eq(
+                "user_id",
+                notificationUserId
+            );
+
+    if (error) {
+
+        console.error(
+            "Mark notification read error:",
+            error
+        );
+
+        return;
+
+    }
+
+    const notification =
+        notificationItems.find(
+            item =>
+                item.id === notificationId
+        );
+
+    if (notification) {
+        notification.is_read = true;
+    }
+
+    updateNotificationCount();
+}
+
+
+// ==========================================
+// CLOSE CURRENT POPUP
+// ==========================================
+
+async function closeNotification() {
+
+    const title =
+        document.getElementById(
+            "notificationTitle"
+        );
+
+    const notification =
+        notificationItems.find(
+            item =>
+                item.title ===
+                title?.textContent
+        );
+
+    if (notification) {
+
+        await markNotificationAsRead(
+            notification.id
+        );
+
+    }
+
+    const popup =
+        document.getElementById(
+            "notificationPopup"
+        );
+
+    if (popup) {
+        popup.style.display = "none";
+    }
+
+
+    // نجيب إشعار تاني غير مقروء
+
+    const unread =
+        notificationItems.filter(
+            item =>
+                !item.is_read
+        );
+
+    if (unread.length > 0) {
+
+        setTimeout(
+            function () {
+
+                showNotificationPopup(
+                    unread[0]
+                );
+
+            },
+            300
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// SHOW NOTIFICATIONS LIST
+// WHEN CLICKING THE BELL
+// ==========================================
+
+async function showNotificationsList() {
+
+    const user =
+        await getNotificationUser();
+
+    if (!user) {
+
+        alert(
+            "من فضلك سجل دخولك أولاً لرؤية الإشعارات."
+        );
+
+        return;
+    }
+
+
+    const notifications =
+        await loadAllNotifications();
+
+
+    // ==========================================
+    // NO NOTIFICATIONS
+    // ==========================================
+
+    if (!notifications.length) {
+
+        alert(
+            "لا توجد إشعارات حاليًا."
+        );
+
+        return;
+    }
+
+
+    // ==========================================
+    // CREATE LIST
+    // ==========================================
+
+    let html = `
+
+        <div
+            id="notificationsListPopup"
+            style="
+                position:fixed;
+                inset:0;
+                background:rgba(0,0,0,.55);
+                z-index:999999;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                padding:20px;
+            "
+        >
+
+            <div
+                style="
+                    background:#fff;
+                    width:min(500px,100%);
+                    max-height:80vh;
+                    overflow:auto;
+                    border-radius:20px;
+                    padding:20px;
+                    direction:rtl;
+                    text-align:right;
+                    box-shadow:0 20px 60px rgba(0,0,0,.25);
+                "
+            >
+
+                <div
+                    style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                        margin-bottom:20px;
+                    "
+                >
+
+                    <h2 style="margin:0;">
+                        🔔 الإشعارات
+                    </h2>
+
+                    <button
+                        id="closeNotificationsList"
+                        type="button"
+                        style="
+                            border:0;
+                            background:none;
+                            font-size:28px;
+                            cursor:pointer;
+                        "
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+    `;
+
+
+    notifications.forEach(
+        function (notification) {
+
+            const date =
+                new Date(
+                    notification.created_at
+                ).toLocaleString(
+                    "ar-EG"
+                );
+
+
+            html += `
+
+                <div
+                    class="siteNotificationItem"
+                    data-id="${notification.id}"
+                    style="
+                        padding:15px;
+                        margin-bottom:12px;
+                        border-radius:15px;
+
+                        background:${
+                            notification.is_read
+                            ? "#f5f5f5"
+                            : "#e8f2ff"
+                        };
+
+                        border-right:
+                            4px solid #0171F9;
+
+                        cursor:pointer;
+                    "
+                >
+
+                    <div
+                        style="
+                            font-weight:700;
+                            margin-bottom:8px;
+                            color:#222;
+                        "
+                    >
+                        ${escapeNotificationHTML(
+                            notification.title ||
+                            "إشعار جديد"
+                        )}
+                    </div>
+
+                    <div
+                        style="
+                            line-height:1.8;
+                            color:#555;
+                        "
+                    >
+                        ${escapeNotificationHTML(
+                            notification.message ||
+                            ""
+                        )}
+                    </div>
+
+                    <small
+                        style="
+                            display:block;
+                            margin-top:8px;
+                            color:#888;
+                        "
+                    >
+                        ${date}
+                    </small>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.insertAdjacentHTML(
+        "beforeend",
+        html
+    );
+
+
+    // ==========================================
+    // CLOSE LIST
+    // ==========================================
+
+    const closeButton =
+        document.getElementById(
+            "closeNotificationsList"
+        );
+
+    if (closeButton) {
+
+        closeButton.addEventListener(
+            "click",
+            function () {
+
+                const popup =
+                    document.getElementById(
+                        "notificationsListPopup"
+                    );
+
+                if (popup) {
+                    popup.remove();
+                }
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // CLICK NOTIFICATION
+    // ==========================================
+
+    document
+        .querySelectorAll(
+            ".siteNotificationItem"
+        )
+        .forEach(
+            function (item) {
+
+                item.addEventListener(
+                    "click",
+                    async function () {
+
+                        const id =
+                            Number(
+                                item.dataset.id
+                            );
+
+                        await markNotificationAsRead(
+                            id
+                        );
+
+                        item.style.background =
+                            "#f5f5f5";
+
+                    }
+                );
+
+            }
+        );
+
+}
+
+
+// ==========================================
+// ESCAPE HTML
+// ==========================================
+
+function escapeNotificationHTML(
+    value
+) {
+
+    return String(value ?? "")
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+// ==========================================
+// SETUP BELL
+// ==========================================
+
+function setupInternalNotificationButton() {
+
+    // ده الجرس الموجود أصلًا في index.html
+    const bell =
+        document.getElementById(
+            "notificationBell"
+        );
+
+    if (!bell) {
+
+        console.error(
+            "notificationBell not found"
+        );
+
+        return;
+    }
+
+
+    // عند الضغط على الجرس
+    bell.addEventListener(
+        "click",
+        async function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            await showNotificationsList();
+
+        }
+    );
+
+
+    // زر OK داخل الـPopup
+    const okButton =
+        document.getElementById(
+            "notificationOk"
+        );
+
+    if (okButton) {
+
+        okButton.addEventListener(
+            "click",
+            closeNotification
+        );
+
+    }
+
+
+    // زر X داخل الـPopup
+    const closeButton =
+        document.getElementById(
+            "closeNotification"
+        );
+
+    if (closeButton) {
+
+        closeButton.addEventListener(
+            "click",
+            closeNotification
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// REALTIME
+// ==========================================
+
+async function setupInternalNotificationRealtime() {
+
+    try {
+
+        const user =
+            await getNotificationUser();
+
+        if (!user) return;
+
+
+        if (notificationChannel) {
+
+            await supabaseClient
+                .removeChannel(
+                    notificationChannel
+                );
+
+        }
+
+
+        notificationChannel =
+            supabaseClient
+                .channel(
+                    "zatune-notifications-" +
+                    user.id
+                )
+                .on(
+                    "postgres_changes",
+                    {
+                        event: "INSERT",
+                        schema: "public",
+                        table: "notifications",
+                        filter:
+                            `user_id=eq.${user.id}`
+                    },
+                    function (payload) {
+
+                        const notification =
+                            payload.new;
+
+                        if (!notification) {
+                            return;
+                        }
+
+
+                        // نضيف الإشعار
+                        notificationItems.unshift(
+                            notification
+                        );
+
+
+                        updateNotificationCount();
+
+
+                        // يظهر فورًا داخل الموقع
+                        if (
+                            !notification.is_read
+                        ) {
+
+                            showNotificationPopup(
+                                notification
+                            );
+
+                        }
+
+                    }
+                )
+                .subscribe(
+                    function (status) {
+
+                        console.log(
+                            "Notification realtime:",
+                            status
+                        );
+
+                    }
+                );
+
+    } catch (error) {
+
+        console.error(
+            "Realtime notification error:",
+            error
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// INITIALIZE NOTIFICATIONS
+// ==========================================
+
+async function setupInternalNotifications() {
+
+    // الجرس الموجود بالفعل
+    setupInternalNotificationButton();
+
+
+    // تحميل الإشعارات
+    await loadAllNotifications();
+
+
+    // أول ما يفتح الموقع
+    await showFirstUnreadNotification();
+
+
+    // Realtime
+    await setupInternalNotificationRealtime();
+
+
+    // احتياطي كل 10 ثواني
+    setInterval(
+        async function () {
+
+            const beforeCount =
+                notificationItems.length;
+
+
+            await loadAllNotifications();
+
+
+            const unread =
+                notificationItems.filter(
+                    notification =>
+                        !notification.is_read
+                );
+
+
+            // لو ظهر إشعار جديد
+            if (
+                unread.length > 0 &&
+                unread.length > beforeCount
+            ) {
+
+                showNotificationPopup(
+                    unread[0]
+                );
+
+            }
+
+        },
+        10000
+    );
+
+}
+
+
+// ==========================================
+// START
+// ==========================================
+
 document.addEventListener(
     "DOMContentLoaded",
-    setupThemeToggle
+    function () {
+
+        setupLoginButton();
+
+        setupThemeToggle();
+
+        setupInternalNotifications();
+
+        loadBooks();
+
+    }
 );

@@ -5,41 +5,241 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zatune | الإشعارات</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap');
+
 *{box-sizing:border-box}
-body{margin:0;background:#f5f7fb;color:#20242b;font-family:Alexandria,Arial,sans-serif}
-header{background:#0171F9;color:#fff;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;gap:15px}
+body{
+  margin:0;
+  background:#f5f7fb;
+  color:#20242b;
+  font-family:Alexandria,Arial,sans-serif
+}
+header{
+  background:#0171F9;
+  color:#fff;
+  padding:18px 5%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px
+}
 header h1{margin:0;font-size:20px}
-header button{border:0;border-radius:12px;padding:11px 17px;background:#fff;color:#0171F9;font-family:inherit;font-weight:700;cursor:pointer}
-.container{width:min(1050px,92%);margin:30px auto}
-.grid{display:grid;grid-template-columns:380px 1fr;gap:22px;align-items:start}
-.box{background:#fff;border-radius:20px;padding:22px;box-shadow:0 8px 30px #0000000c}
+header button{
+  border:0;
+  border-radius:12px;
+  padding:11px 17px;
+  background:#fff;
+  color:#0171F9;
+  font-family:inherit;
+  font-weight:700;
+  cursor:pointer
+}
+.container{width:min(1100px,94%);margin:30px auto}
+.grid{
+  display:grid;
+  grid-template-columns:380px 1fr;
+  gap:22px;
+  align-items:start
+}
+.box{
+  background:#fff;
+  border-radius:20px;
+  padding:22px;
+  box-shadow:0 8px 30px #0000000c
+}
 h2{font-size:18px;margin:0 0 18px}
-label{display:block;font-size:12px;font-weight:700;margin:14px 0 7px}
-input,select,textarea{width:100%;border:1px solid #ddd;border-radius:11px;padding:11px 12px;font-family:inherit;outline:none;background:#fff}
+label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  margin:14px 0 7px
+}
+input,select,textarea{
+  width:100%;
+  border:1px solid #ddd;
+  border-radius:11px;
+  padding:11px 12px;
+  font-family:inherit;
+  outline:none;
+  background:#fff
+}
 input,select{height:45px}
 textarea{min-height:130px;resize:vertical;line-height:1.8}
 input:focus,select:focus,textarea:focus{border-color:#0171F9}
-.primary{width:100%;border:0;border-radius:11px;padding:13px 15px;font-family:inherit;font-weight:700;cursor:pointer;background:#0171F9;color:#fff;margin-top:18px}
+.primary{
+  width:100%;
+  border:0;
+  border-radius:11px;
+  padding:13px 15px;
+  font-family:inherit;
+  font-weight:700;
+  cursor:pointer;
+  background:#0171F9;
+  color:#fff;
+  margin-top:18px
+}
 .primary:disabled{opacity:.6;cursor:not-allowed}
-.secondary{border:0;border-radius:11px;padding:10px 14px;font-family:inherit;font-weight:700;cursor:pointer;background:#eee;color:#333}
-.msg{display:none;margin-top:12px;padding:11px;border-radius:10px;font-size:12px;line-height:1.8}
+.secondary{
+  border:0;
+  border-radius:11px;
+  padding:10px 14px;
+  font-family:inherit;
+  font-weight:700;
+  cursor:pointer;
+  background:#eee;
+  color:#333
+}
+.msg{
+  display:none;
+  margin-top:12px;
+  padding:11px;
+  border-radius:10px;
+  font-size:12px;
+  line-height:1.8
+}
 .msg.ok{display:block;background:#ecfff3;color:#167847}
 .msg.err{display:block;background:#fff0f1;color:#c62828}
-.info{background:#f7f9fc;border-radius:13px;padding:13px;font-size:11px;line-height:1.9;color:#666;margin-top:15px}
+.info{
+  background:#f7f9fc;
+  border-radius:13px;
+  padding:13px;
+  font-size:11px;
+  line-height:1.9;
+  color:#666;
+  margin-top:15px
+}
 .stat{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap}
-.stat div{background:#f7f9fc;border-radius:12px;padding:11px 14px;font-size:11px;min-width:120px}
+.stat div{
+  background:#f7f9fc;
+  border-radius:12px;
+  padding:11px 14px;
+  font-size:11px;
+  min-width:120px
+}
 .stat b{font-size:17px;display:block;margin-top:3px}
 .tableWrap{overflow:auto}
 table{width:100%;border-collapse:collapse;font-size:11px}
-th,td{padding:11px 8px;border-bottom:1px solid #eee;text-align:right;vertical-align:middle}
+th,td{
+  padding:11px 8px;
+  border-bottom:1px solid #eee;
+  text-align:right;
+  vertical-align:middle
+}
 th{color:#777;font-size:10px}
-.badge{display:inline-block;padding:5px 9px;border-radius:20px;font-size:10px;font-weight:700;background:#eaf3ff;color:#0171F9}
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:10px;
+  font-weight:700;
+  background:#eaf3ff;
+  color:#0171F9
+}
+.oldBadge{
+  display:inline-block;
+  padding:4px 7px;
+  border-radius:7px;
+  margin-right:5px;
+  font-size:9px;
+  font-weight:700;
+  background:#fff3cd;
+  color:#8a6200
+}
+.newBadge{
+  display:inline-block;
+  padding:4px 7px;
+  border-radius:7px;
+  margin-right:5px;
+  font-size:9px;
+  font-weight:700;
+  background:#e8f5e9;
+  color:#287a36
+}
 .empty{text-align:center;color:#888;padding:30px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.container{width:95%}}
+.actionBtns{display:flex;gap:6px;flex-wrap:wrap}
+.actionBtn{
+  border:0;
+  border-radius:8px;
+  padding:7px 9px;
+  font-family:inherit;
+  font-size:10px;
+  font-weight:700;
+  cursor:pointer
+}
+.actionBtn.edit{background:#eef5ff;color:#0171F9}
+.actionBtn.delete{background:#fff0f1;color:#c62828}
+.bulkEditBtn{
+  border:0;
+  border-radius:10px;
+  padding:10px 14px;
+  font-family:inherit;
+  font-weight:700;
+  cursor:pointer;
+  background:#0171F9;
+  color:#fff
+}
+.deleteAllBtn{
+  border:0;
+  border-radius:10px;
+  padding:10px 14px;
+  font-family:inherit;
+  font-weight:700;
+  cursor:pointer;
+  background:#c62828;
+  color:#fff
+}
+.filterBar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
+.filterTab{
+  border:0;
+  border-radius:10px;
+  padding:9px 14px;
+  font-family:inherit;
+  font-weight:700;
+  cursor:pointer;
+  background:#eee;
+  color:#555
+}
+.filterTab.active{background:#0171F9;color:#fff}
+.modalOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:999999
+}
+.modalBox{
+  width:min(560px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:20px;
+  padding:22px;
+  box-shadow:0 20px 70px rgba(0,0,0,.25)
+}
+.modalBox h3{margin:0 0 15px}
+.modalActions{display:flex;gap:8px;margin-top:15px}
+.modalActions button{flex:1}
+.scopeInfo{
+  padding:10px 12px;
+  border-radius:10px;
+  background:#f5f7fb;
+  color:#555;
+  font-size:12px;
+  line-height:1.8;
+  margin-top:10px
+}
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr}
+  .container{width:95%}
+}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -96,13 +296,31 @@ th{color:#777;font-size:10px}
 
     <section>
       <div class="stat">
-        <div>📢 آخر الإشعارات<b id="count">0</b></div>
+        <div>📢 الظاهر حاليًا<b id="count">0</b></div>
         <div>👨‍🎓 الطلاب<b id="studentCount">0</b></div>
         <div>📚 الكتب<b id="bookCount">0</b></div>
+        <div>🔔 كل الإشعارات<b id="allNotificationCount">0</b></div>
       </div>
 
       <div class="box">
-        <h2>📋 سجل الإشعارات المرسلة</h2>
+
+        <div class="filterBar">
+          <button class="filterTab active" id="showNewBtn">🆕 الجديدة</button>
+          <button class="filterTab" id="showOldBtn">📦 القديمة</button>
+          <button class="filterTab" id="showAllBtn">📋 الكل</button>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:15px">
+          <h2 style="margin:0">📋 سجل الإشعارات المرسلة</h2>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input id="notificationSearch" placeholder="ابحث في الإشعارات..." style="height:42px;min-width:220px">
+            <button class="secondary" id="refreshNotificationsBtn">تحديث</button>
+            <button class="bulkEditBtn" id="manageGroupsBtn">🎯 تعديل / حذف حسب النطاق</button>
+            <button class="deleteAllBtn" id="deleteAllNotificationsBtn">🗑️ حذف كل الإشعارات</button>
+          </div>
+        </div>
+
         <div class="tableWrap">
           <table>
             <thead>
@@ -110,17 +328,91 @@ th{color:#777;font-size:10px}
                 <th>العنوان</th>
                 <th>الرسالة</th>
                 <th>الطالب</th>
+                <th>الكتاب</th>
                 <th>التاريخ</th>
+                <th>الإجراء</th>
               </tr>
             </thead>
             <tbody id="notificationsBody">
-              <tr><td colspan="4" class="empty">جاري التحميل...</td></tr>
+              <tr><td colspan="6" class="empty">جاري التحميل...</td></tr>
             </tbody>
           </table>
         </div>
+
       </div>
     </section>
 
+  </div>
+</div>
+
+<!-- تعديل إشعار واحد -->
+<div class="modalOverlay" id="editModal">
+  <div class="modalBox">
+    <h3>✏️ تعديل إشعار لطالب واحد</h3>
+
+    <label>عنوان الإشعار</label>
+    <input id="editTitle" maxlength="120">
+
+    <label>نص الإشعار</label>
+    <textarea id="editMessage" maxlength="1000"></textarea>
+
+    <div id="editMsg" class="msg"></div>
+
+    <div class="modalActions">
+      <button class="primary" id="saveEditBtn">💾 حفظ التعديل</button>
+      <button class="secondary" id="cancelEditBtn">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- تعديل / حذف مجموعة -->
+<div class="modalOverlay" id="groupModal">
+  <div class="modalBox">
+    <h3>🎯 تعديل / حذف حسب النطاق</h3>
+
+    <label>نوع العملية</label>
+    <select id="groupAction">
+      <option value="edit">✏️ تعديل</option>
+      <option value="delete">🗑️ حذف</option>
+    </select>
+
+    <label>النطاق</label>
+    <select id="groupScope">
+      <option value="all">👥 إشعار جماعي محدد</option>
+      <option value="book">📚 إشعار خاص بكتاب</option>
+      <option value="student">👤 طالب معين</option>
+    </select>
+
+    <div id="groupBookWrap" style="display:none">
+      <label>اختر الكتاب</label>
+      <select id="groupBookSelect"></select>
+    </div>
+
+    <div id="groupStudentWrap" style="display:none">
+      <label>اختر الطالب</label>
+      <select id="groupStudentSelect"></select>
+    </div>
+
+    <div id="groupNotificationWrap">
+      <label>اختر الإشعار</label>
+      <select id="groupNotificationSelect"></select>
+    </div>
+
+    <div id="groupEditFields">
+      <label>العنوان الجديد</label>
+      <input id="groupTitle" maxlength="120">
+
+      <label>الرسالة الجديدة</label>
+      <textarea id="groupMessage" maxlength="1000"></textarea>
+    </div>
+
+    <div id="groupInfo" class="scopeInfo"></div>
+    <div id="groupMsg" class="msg"></div>
+
+    <div class="modalActions">
+      <button class="primary" id="applyGroupBtn">تنفيذ</button>
+      <button class="secondary" id="cancelGroupBtn">إلغاء</button>
+    </div>
   </div>
 </div>
 
@@ -133,12 +425,9 @@ const $ = id => document.getElementById(id);
 
 let books = [];
 let students = [];
-
-function showMsg(text, type){
-  const el = $("msg");
-  el.textContent = text;
-  el.className = "msg " + type;
-}
+let notificationRows = [];
+let currentFilter = "new";
+let editingId = null;
 
 function escapeHtml(value){
   return String(value ?? "")
@@ -149,10 +438,22 @@ function escapeHtml(value){
     .replace(/'/g,"&#039;");
 }
 
-async function checkAdmin(){
-  const {data:{session}} = await client.auth.getSession();
+function showMsg(text,type){
+  const el = $("msg");
+  el.textContent = text;
+  el.className = "msg " + type;
+}
 
-  if(!session){
+function setModalMessage(id,text,type){
+  const el = $(id);
+  el.textContent = text || "";
+  el.className = text ? "msg " + type : "msg";
+}
+
+async function checkAdmin(){
+  const {data:{session},error:sessionError} = await client.auth.getSession();
+
+  if(sessionError || !session){
     window.location.href = "login.html";
     return false;
   }
@@ -163,7 +464,13 @@ async function checkAdmin(){
     .eq("id",session.user.id)
     .maybeSingle();
 
-  if(error || !data){
+  if(error){
+    console.error(error);
+    alert("حدث خطأ أثناء التحقق من صلاحيات الأدمن: " + error.message);
+    return false;
+  }
+
+  if(!data){
     alert("غير مصرح لك بالدخول إلى صفحة الإشعارات.");
     window.location.href = "index.html";
     return false;
@@ -180,6 +487,8 @@ async function loadBooks(){
 
   if(error){
     console.error(error);
+    $("bookCount").textContent = "خطأ";
+    $("bookSelect").innerHTML = '<option value="">تعذر تحميل الكتب</option>';
     return;
   }
 
@@ -187,6 +496,14 @@ async function loadBooks(){
   $("bookCount").textContent = books.length;
 
   $("bookSelect").innerHTML =
+    '<option value="">اختر الكتاب</option>' +
+    books.map(b =>
+      `<option value="${b.id}">
+        ${escapeHtml(b.name)}${b.book_code ? " — " + escapeHtml(b.book_code) : ""}
+      </option>`
+    ).join("");
+
+  $("groupBookSelect").innerHTML =
     '<option value="">اختر الكتاب</option>' +
     books.map(b =>
       `<option value="${b.id}">
@@ -203,98 +520,566 @@ async function loadStudents(){
 
   if(error){
     console.error(error);
+    $("studentCount").textContent = "خطأ";
+    $("studentSelect").innerHTML = '<option value="">تعذر تحميل الطلاب</option>';
     return;
   }
 
   students = data || [];
   $("studentCount").textContent = students.length;
 
-  $("studentSelect").innerHTML =
+  const options =
     '<option value="">اختر الطالب</option>' +
     students.map(s =>
       `<option value="${s.id}">
         ${escapeHtml(s.full_name || "بدون اسم")}${s.student_code ? " — " + escapeHtml(s.student_code) : ""}
       </option>`
     ).join("");
+
+  $("studentSelect").innerHTML = options;
+  $("groupStudentSelect").innerHTML = options;
+}
+
+function getStudentName(id){
+  return students.find(s => String(s.id) === String(id))?.full_name || "طالب";
+}
+
+function getBookName(id){
+  if(!id) return "عام";
+  return books.find(b => String(b.id) === String(id))?.name || "كتاب غير معروف";
 }
 
 async function loadNotifications(){
   const {data,error} = await client
     .from("notifications")
-    .select("id,user_id,title,message,created_at")
+    .select("id,user_id,book_id,group_id,title,message,is_read,is_legacy,created_at")
     .order("created_at",{ascending:false})
-    .limit(50);
+    .limit(1000);
 
   if(error){
     console.error(error);
     $("notificationsBody").innerHTML =
-      `<tr><td colspan="4" class="empty">تعذر تحميل الإشعارات: ${escapeHtml(error.message)}</td></tr>`;
-    return;
+      `<tr><td colspan="6" class="empty">
+        تعذر تحميل الإشعارات: ${escapeHtml(error.message)}
+      </td></tr>`;
+    return false;
   }
 
-  const rows = data || [];
-  $("count").textContent = rows.length;
+  notificationRows = data || [];
+  $("allNotificationCount").textContent = notificationRows.length;
+  renderNotifications();
+  return true;
+}
 
-  const names = {};
-  students.forEach(s => names[s.id] = s.full_name || "طالب");
+function renderNotifications(){
+  const search = ($("notificationSearch").value || "").trim().toLowerCase();
 
-  if(!rows.length){
+  const filtered = notificationRows.filter(n => {
+    if(currentFilter === "new" && n.is_legacy) return false;
+    if(currentFilter === "old" && !n.is_legacy) return false;
+
+    const student = getStudentName(n.user_id);
+    const book = getBookName(n.book_id);
+
+    return !search ||
+      String(n.title || "").toLowerCase().includes(search) ||
+      String(n.message || "").toLowerCase().includes(search) ||
+      String(student || "").toLowerCase().includes(search) ||
+      String(book || "").toLowerCase().includes(search);
+  });
+
+  $("count").textContent = filtered.length;
+
+  if(!filtered.length){
+    const text =
+      currentFilter === "new"
+        ? "لا توجد إشعارات جديدة حتى الآن."
+        : currentFilter === "old"
+        ? "لا توجد إشعارات قديمة."
+        : "لا توجد إشعارات.";
+
     $("notificationsBody").innerHTML =
-      '<tr><td colspan="4" class="empty">لا توجد إشعارات مرسلة حتى الآن.</td></tr>';
+      `<tr><td colspan="6" class="empty">${text}</td></tr>`;
     return;
   }
 
-  $("notificationsBody").innerHTML = rows.map(n => {
+  $("notificationsBody").innerHTML = filtered.map(n => {
     const date = new Date(n.created_at).toLocaleString("ar-EG");
+    const student = getStudentName(n.user_id);
+    const book = getBookName(n.book_id);
+
     return `
       <tr>
-        <td><span class="badge">${escapeHtml(n.title)}</span></td>
+        <td>
+          <span class="badge">${escapeHtml(n.title)}</span>
+          ${n.is_legacy
+            ? '<span class="oldBadge">قديم</span>'
+            : '<span class="newBadge">جديد</span>'}
+        </td>
+
         <td>${escapeHtml(n.message)}</td>
-        <td>${escapeHtml(names[n.user_id] || "طالب")}</td>
+
+        <td>${escapeHtml(student)}</td>
+
+        <td>${escapeHtml(book)}</td>
+
         <td>${escapeHtml(date)}</td>
+
+        <td>
+          <div class="actionBtns">
+            <button class="actionBtn edit"
+              onclick="editOne(${n.id})">
+              ✏️ تعديل
+            </button>
+
+            <button class="actionBtn delete"
+              onclick="deleteOne(${n.id})">
+              🗑️ حذف
+            </button>
+          </div>
+        </td>
       </tr>
     `;
   }).join("");
 }
 
-$("targetType").addEventListener("change", function(){
-  $("bookTarget").style.display = this.value === "book" ? "block" : "none";
-  $("studentTarget").style.display = this.value === "student" ? "block" : "none";
-});
+/*
+  المجموعات الجديدة تعتمد على group_id.
+  الإشعارات القديمة التي تم ترحيلها أيضًا لها group_id،
+  لكن is_legacy=true يجعلها منفصلة في الواجهة.
+*/
+function getGroups(legacyValue){
+  const map = new Map();
 
-$("dashboardBtn").addEventListener("click", () => {
-  window.location.href = "admin.html";
-});
+  notificationRows
+    .filter(n => Boolean(n.is_legacy) === legacyValue)
+    .forEach(n => {
+      if(!n.group_id) return;
 
-$("logoutBtn").addEventListener("click", async () => {
-  await client.auth.signOut();
-  window.location.href = "login.html";
-});
+      if(!map.has(n.group_id)){
+        map.set(n.group_id,{
+          group_id:n.group_id,
+          title:n.title || "",
+          message:n.message || "",
+          book_id:n.book_id || null,
+          created_at:n.created_at,
+          ids:[]
+        });
+      }
 
-$("sendBtn").addEventListener("click", async () => {
+      map.get(n.group_id).ids.push(n.id);
+    });
+
+  return [...map.values()]
+    .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+}
+
+function getVisibleGroups(){
+  if(currentFilter === "old") return getGroups(true);
+  if(currentFilter === "new") return getGroups(false);
+
+  return [
+    ...getGroups(false),
+    ...getGroups(true)
+  ].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+}
+
+function populateGroupSelect(){
+  const groups = getVisibleGroups();
+
+  $("groupNotificationSelect").innerHTML =
+    groups.length
+      ? groups.map((g,i) => {
+          const date = new Date(g.created_at).toLocaleString("ar-EG");
+          const type = notificationRows.find(n => n.id === g.ids[0])?.is_legacy
+            ? "قديم"
+            : "جديد";
+          const book = getBookName(g.book_id);
+
+          return `
+            <option value="${i}">
+              ${escapeHtml(g.title)}
+              — ${escapeHtml(book)}
+              — ${g.ids.length} طالب
+              — ${type}
+              — ${escapeHtml(date)}
+            </option>
+          `;
+        }).join("")
+      : '<option value="">لا توجد مجموعات إشعارات</option>';
+
+  loadSelectedGroup();
+}
+
+function loadSelectedGroup(){
+  const groups = getVisibleGroups();
+  const index = Number($("groupNotificationSelect").value);
+  const group = groups[index];
+
+  if(!group){
+    $("groupTitle").value = "";
+    $("groupMessage").value = "";
+    $("groupInfo").textContent = "لا يوجد إشعار جماعي متاح.";
+    return;
+  }
+
+  $("groupTitle").value = group.title;
+  $("groupMessage").value = group.message;
+
+  $("groupInfo").textContent =
+    `سيتم تنفيذ العملية على ${group.ids.length} طالب — ${getBookName(group.book_id)}.`;
+}
+
+function updateGroupUI(){
+  const action = $("groupAction").value;
+  const scope = $("groupScope").value;
+
+  $("groupBookWrap").style.display =
+    scope === "book" ? "block" : "none";
+
+  $("groupStudentWrap").style.display =
+    scope === "student" ? "block" : "none";
+
+  $("groupNotificationWrap").style.display =
+    scope === "student" ? "none" : "block";
+
+  $("groupEditFields").style.display =
+    action === "edit" ? "block" : "none";
+
+  if(scope === "student"){
+    $("groupInfo").textContent =
+      "ستختار طالبًا، ثم سيظهر لك إشعار واحد لتعديله أو حذفه.";
+    loadStudentNotificationChoices();
+    return;
+  }
+
+  if(scope === "book"){
+    $("groupInfo").textContent =
+      "سيتم التعامل مع إشعار جماعي مرتبط بالكتاب المحدد فقط.";
+  }else{
+    $("groupInfo").textContent =
+      "سيتم التعامل مع مجموعة إرسال محددة فقط، وليس كل الإشعارات.";
+  }
+
+  populateGroupSelect();
+}
+
+function loadStudentNotificationChoices(){
+  const studentId = $("groupStudentSelect").value;
+
+  if(!studentId){
+    $("groupNotificationSelect").innerHTML =
+      '<option value="">اختر الطالب أولاً</option>';
+    return;
+  }
+
+  const rows = notificationRows.filter(n =>
+    String(n.user_id) === String(studentId)
+  );
+
+  $("groupNotificationSelect").innerHTML =
+    rows.length
+      ? rows.map((n,i) => {
+          const date = new Date(n.created_at).toLocaleString("ar-EG");
+          return `
+            <option value="${i}">
+              ${escapeHtml(n.title)}
+              — ${n.is_legacy ? "قديم" : "جديد"}
+              — ${escapeHtml(date)}
+            </option>
+          `;
+        }).join("")
+      : '<option value="">هذا الطالب ليس لديه إشعارات</option>';
+
+  loadSelectedStudentNotification();
+}
+
+function loadSelectedStudentNotification(){
+  const studentId = $("groupStudentSelect").value;
+  const rows = notificationRows.filter(n =>
+    String(n.user_id) === String(studentId)
+  );
+
+  const n = rows[Number($("groupNotificationSelect").value)];
+
+  if(!n){
+    $("groupTitle").value = "";
+    $("groupMessage").value = "";
+    return;
+  }
+
+  $("groupTitle").value = n.title || "";
+  $("groupMessage").value = n.message || "";
+
+  $("groupInfo").textContent =
+    `هذا الإشعار عند الطالب ${getStudentName(n.user_id)} فقط.`;
+}
+
+function getSelectedGroup(){
+  const scope = $("groupScope").value;
+
+  if(scope === "student"){
+    const studentId = $("groupStudentSelect").value;
+
+    const rows = notificationRows.filter(n =>
+      String(n.user_id) === String(studentId)
+    );
+
+    return rows[Number($("groupNotificationSelect").value)] || null;
+  }
+
+  let groups = getVisibleGroups();
+
+  if(scope === "book"){
+    const bookId = $("groupBookSelect").value;
+    groups = groups.filter(g =>
+      String(g.book_id) === String(bookId)
+    );
+  }
+
+  return groups[Number($("groupNotificationSelect").value)] || null;
+}
+
+async function openGroupManager(){
+  $("groupAction").value = "edit";
+  $("groupScope").value = "all";
+  $("groupMsg").className = "msg";
+  $("groupMsg").textContent = "";
+
+  updateGroupUI();
+  $("groupModal").style.display = "flex";
+}
+
+async function applyGroupAction(){
+  const action = $("groupAction").value;
+  const scope = $("groupScope").value;
+
+  const selected = getSelectedGroup();
+
+  if(!selected){
+    alert("اختر الإشعار أولاً.");
+    return;
+  }
+
+  if(action === "edit"){
+    const title = $("groupTitle").value.trim();
+    const message = $("groupMessage").value.trim();
+
+    if(!title || !message){
+      setModalMessage(
+        "groupMsg",
+        "اكتب العنوان والرسالة.",
+        "err"
+      );
+      return;
+    }
+
+    let ids = [];
+
+    if(scope === "student"){
+      ids = [selected.id];
+    }else{
+      ids = selected.ids;
+    }
+
+    if(!confirm(
+      `سيتم تعديل الإشعار عند ${ids.length} طالب.\n\nهل تريد المتابعة؟`
+    )){
+      return;
+    }
+
+    const {error} = await client
+      .from("notifications")
+      .update({
+        title,
+        message
+      })
+      .in("id",ids);
+
+    if(error){
+      console.error(error);
+      setModalMessage(
+        "groupMsg",
+        "حدث خطأ أثناء التعديل: " + error.message,
+        "err"
+      );
+      return;
+    }
+
+    alert(`تم تعديل الإشعار عند ${ids.length} طالب بنجاح ✅`);
+    $("groupModal").style.display = "none";
+    await loadNotifications();
+    return;
+  }
+
+  let ids = [];
+
+  if(scope === "student"){
+    ids = [selected.id];
+  }else{
+    ids = selected.ids;
+  }
+
+  if(!confirm(
+    `⚠️ سيتم حذف هذا الإشعار عند ${ids.length} طالب نهائيًا.\n\nهل تريد المتابعة؟`
+  )){
+    return;
+  }
+
+  const {error} = await client
+    .from("notifications")
+    .delete()
+    .in("id",ids);
+
+  if(error){
+    console.error(error);
+    setModalMessage(
+      "groupMsg",
+      "حدث خطأ أثناء الحذف: " + error.message,
+      "err"
+    );
+    return;
+  }
+
+  alert(`تم حذف الإشعار عند ${ids.length} طالب 🗑️`);
+  $("groupModal").style.display = "none";
+  await loadNotifications();
+}
+
+window.editOne = function(id){
+  const n = notificationRows.find(x => Number(x.id) === Number(id));
+  if(!n) return;
+
+  editingId = id;
+
+  $("editTitle").value = n.title || "";
+  $("editMessage").value = n.message || "";
+  $("editMsg").className = "msg";
+  $("editMsg").textContent = "";
+
+  $("editModal").style.display = "flex";
+};
+
+window.deleteOne = async function(id){
+  const n = notificationRows.find(x => Number(x.id) === Number(id));
+  if(!n) return;
+
+  if(!confirm(
+    `هل تريد حذف هذا الإشعار من الطالب ${getStudentName(n.user_id)}؟`
+  )){
+    return;
+  }
+
+  const {error} = await client
+    .from("notifications")
+    .delete()
+    .eq("id",id);
+
+  if(error){
+    alert("حدث خطأ أثناء الحذف: " + error.message);
+    return;
+  }
+
+  alert("تم حذف الإشعار بنجاح 🗑️");
+  await loadNotifications();
+};
+
+async function saveOne(){
+  if(!editingId) return;
+
+  const title = $("editTitle").value.trim();
+  const message = $("editMessage").value.trim();
+
+  if(!title || !message){
+    setModalMessage(
+      "editMsg",
+      "اكتب العنوان والرسالة.",
+      "err"
+    );
+    return;
+  }
+
+  $("saveEditBtn").disabled = true;
+  $("saveEditBtn").textContent = "جاري الحفظ...";
+
+  const {error} = await client
+    .from("notifications")
+    .update({title,message})
+    .eq("id",editingId);
+
+  $("saveEditBtn").disabled = false;
+  $("saveEditBtn").textContent = "💾 حفظ التعديل";
+
+  if(error){
+    setModalMessage(
+      "editMsg",
+      "حدث خطأ: " + error.message,
+      "err"
+    );
+    return;
+  }
+
+  $("editModal").style.display = "none";
+  editingId = null;
+
+  alert("تم تعديل الإشعار بنجاح ✅");
+  await loadNotifications();
+}
+
+async function deleteAll(){
+  if(!notificationRows.length){
+    alert("لا توجد إشعارات.");
+    return;
+  }
+
+  if(!confirm(
+    "⚠️ سيتم حذف جميع الإشعارات القديمة والجديدة من جميع الطلاب.\n\nهل تريد المتابعة؟"
+  )){
+    return;
+  }
+
+  if(!confirm("تأكيد أخير: حذف جميع الإشعارات نهائيًا؟")){
+    return;
+  }
+
+  const {error} = await client
+    .from("notifications")
+    .delete()
+    .not("id","is",null);
+
+  if(error){
+    alert("حدث خطأ أثناء حذف الإشعارات: " + error.message);
+    return;
+  }
+
+  alert("تم حذف جميع الإشعارات بنجاح 🗑️");
+  await loadNotifications();
+}
+
+async function sendNotification(){
   const targetType = $("targetType").value;
   const title = $("title").value.trim();
   const message = $("message").value.trim();
 
   if(!title || !message){
-    showMsg("اكتب عنوان الإشعار والرسالة أولاً.", "err");
+    showMsg("اكتب عنوان الإشعار والرسالة أولاً.","err");
     return;
   }
 
   if(targetType === "book" && !$("bookSelect").value){
-    showMsg("اختر الكتاب أولاً.", "err");
+    showMsg("اختر الكتاب أولاً.","err");
     return;
   }
 
   if(targetType === "student" && !$("studentSelect").value){
-    showMsg("اختر الطالب أولاً.", "err");
+    showMsg("اختر الطالب أولاً.","err");
     return;
   }
 
   $("sendBtn").disabled = true;
   $("sendBtn").textContent = "جاري الإرسال...";
 
-  try {
+  try{
     let userIds = [];
     let bookId = null;
 
@@ -316,54 +1101,196 @@ $("sendBtn").addEventListener("click", async () => {
 
       if(error) throw error;
 
-      userIds = [...new Set((data || []).map(r => r.user_id).filter(Boolean))];
-
-      if(!userIds.length){
-        showMsg("لا يوجد طلاب حاجزين هذا الكتاب حتى الآن.", "err");
-        return;
-      }
+      userIds = [...new Set(
+        (data || [])
+          .map(r => r.user_id)
+          .filter(Boolean)
+      )];
     }
 
     if(!userIds.length){
-      showMsg("لا يوجد طلاب لإرسال الإشعار إليهم.", "err");
+      showMsg(
+        targetType === "book"
+          ? "لا يوجد طلاب حاجزين هذا الكتاب حتى الآن."
+          : "لا يوجد طلاب لإرسال الإشعار إليهم.",
+        "err"
+      );
       return;
     }
 
+    const groupId = crypto.randomUUID();
+
     const rows = userIds.map(userId => ({
-      user_id: userId,
-      title: title,
-      message: message,
-      is_read: false
+      user_id:userId,
+      book_id:bookId,
+      group_id:groupId,
+      title:title,
+      message:message,
+      is_read:false,
+      is_legacy:false
     }));
 
-    const {data: insertedNotifications, error} = await client
+    const {error} = await client
       .from("notifications")
-      .insert(rows)
-      .select("id,user_id,title,message,is_read,created_at");
+      .insert(rows);
 
     if(error) throw error;
 
-    console.log("Inserted notifications:", insertedNotifications);
-
-    showMsg(`تم إرسال الإشعار بنجاح إلى ${userIds.length} طالب/طلاب ✅`, "ok");
+    showMsg(
+      `تم إرسال الإشعار بنجاح إلى ${userIds.length} طالب/طلاب ✅`,
+      "ok"
+    );
 
     $("title").value = "";
     $("message").value = "";
 
     await loadNotifications();
 
-  } catch(error){
+  }catch(error){
     console.error(error);
-    showMsg("حدث خطأ أثناء إرسال الإشعار: " + error.message, "err");
-  } finally {
+    showMsg(
+      "حدث خطأ أثناء إرسال الإشعار: " + error.message,
+      "err"
+    );
+  }finally{
     $("sendBtn").disabled = false;
     $("sendBtn").textContent = "🚀 إرسال الإشعار";
   }
+}
+
+function setFilter(filter){
+  currentFilter = filter;
+
+  $("showNewBtn").classList.toggle("active",filter === "new");
+  $("showOldBtn").classList.toggle("active",filter === "old");
+  $("showAllBtn").classList.toggle("active",filter === "all");
+
+  renderNotifications();
+}
+
+/* أحداث الواجهة */
+
+$("targetType").addEventListener("change",function(){
+  $("bookTarget").style.display =
+    this.value === "book" ? "block" : "none";
+
+  $("studentTarget").style.display =
+    this.value === "student" ? "block" : "none";
 });
 
+$("showNewBtn").addEventListener("click",() => setFilter("new"));
+$("showOldBtn").addEventListener("click",() => setFilter("old"));
+$("showAllBtn").addEventListener("click",() => setFilter("all"));
+
+$("notificationSearch").addEventListener(
+  "input",
+  renderNotifications
+);
+
+$("refreshNotificationsBtn").addEventListener(
+  "click",
+  loadNotifications
+);
+
+$("deleteAllNotificationsBtn").addEventListener(
+  "click",
+  deleteAll
+);
+
+$("sendBtn").addEventListener(
+  "click",
+  sendNotification
+);
+
+$("dashboardBtn").addEventListener(
+  "click",
+  () => window.location.href = "admin.html"
+);
+
+$("logoutBtn").addEventListener(
+  "click",
+  async() => {
+    await client.auth.signOut();
+    window.location.href = "login.html";
+  }
+);
+
+/* التعديل الفردي */
+$("saveEditBtn").addEventListener("click",saveOne);
+
+$("cancelEditBtn").addEventListener("click",() => {
+  $("editModal").style.display = "none";
+  editingId = null;
+});
+
+$("editModal").addEventListener("click",e => {
+  if(e.target === $("editModal")){
+    $("editModal").style.display = "none";
+    editingId = null;
+  }
+});
+
+/* التعديل / الحذف حسب النطاق */
+$("manageGroupsBtn").addEventListener(
+  "click",
+  openGroupManager
+);
+
+$("groupAction").addEventListener(
+  "change",
+  updateGroupUI
+);
+
+$("groupScope").addEventListener(
+  "change",
+  updateGroupUI
+);
+
+$("groupBookSelect").addEventListener(
+  "change",
+  () => {
+    if($("groupScope").value === "book"){
+      populateGroupSelect();
+    }
+  }
+);
+
+$("groupStudentSelect").addEventListener(
+  "change",
+  loadStudentNotificationChoices
+);
+
+$("groupNotificationSelect").addEventListener(
+  "change",
+  () => {
+    if($("groupScope").value === "student"){
+      loadSelectedStudentNotification();
+    }else{
+      loadSelectedGroup();
+    }
+  }
+);
+
+$("applyGroupBtn").addEventListener(
+  "click",
+  applyGroupAction
+);
+
+$("cancelGroupBtn").addEventListener(
+  "click",
+  () => $("groupModal").style.display = "none"
+);
+
+$("groupModal").addEventListener("click",e => {
+  if(e.target === $("groupModal")){
+    $("groupModal").style.display = "none";
+  }
+});
+
+/* تشغيل الصفحة */
 (async function init(){
-  const isAdmin = await checkAdmin();
-  if(!isAdmin) return;
+  const ok = await checkAdmin();
+  if(!ok) return;
 
   await Promise.all([
     loadBooks(),
